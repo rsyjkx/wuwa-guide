@@ -111,40 +111,24 @@ const buildOptional = z.preprocess(
  *   title / character / author / version / tags / cover / images / video / content
  * （content 会被 Staticman 写成正文，不进入 frontmatter）
  */
-const guides = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: './src/content/guides' }),
-  schema: z.object({
-    /** 攻略标题 */
-    title: requiredText,
-    /** 角色名（必填，角色页筛选依据） */
-    character: requiredText,
-    /** 作者昵称（可选） */
-    author: optionalText,
-    /** 提交日期：Staticman 通过 generatedFields 自动写入 ISO8601 字符串 */
-    date: z.coerce.date(),
-    /** 标签（可选） */
-    tags: tagList.default([]),
-    /** 适用游戏版本（可选） */
-    version: optionalText,
-    /** 封面图（可选） */
-    cover: optionalUrl,
-    /** 图集（可选）：截图、词条、伤害数字等 */
-    images: urlList.default([]),
-    /** 视频（可选）：B 站 / YouTube 链接，或 .mp4 直链 */
-    video: optionalUrl,
-    /** 视频出处（可选）：作者 / 攻略组 / UP 主名字，标注来源用 */
-    videoCredit: optionalText,
-    /** 养成面板（可选）：顶部"养成卡"的结构化数据 */
-    build: buildOptional,
-  }),
-});
-
 /** 配队面板：每个位置一段（声骸 / 武器 / 加点），对应"一图流"里的一排 */
 const buildMember = z.object({
   /** 位置：一号位 / 二号位 / 可替换 */
   slot: requiredText,
   /** 角色名 */
   character: requiredText,
+  /** 毕业面板数值（每个成员一张小面板） */
+  attack: optionalText,
+  critRate: optionalText,
+  critDamage: optionalText,
+  energyRegen: optionalText,
+  /** 关键共鸣链 */
+  keyNodes: z
+    .preprocess(
+      (value) => (Array.isArray(value) ? value : typeof value === 'string' ? value.split(/[\s,，、]+/) : []),
+      z.array(z.coerce.number().int().min(1).max(6)).max(6),
+    )
+    .default([]),
   echoSet: optionalText,
   echoCosts: z.array(buildEcho).max(8).default([]),
   echoFirst: optionalText,
@@ -192,4 +176,4 @@ const teams = defineCollection({
   }),
 });
 
-export const collections = { guides, teams };
+export const collections = { teams };
