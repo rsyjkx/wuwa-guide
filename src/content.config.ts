@@ -93,6 +93,8 @@ const buildSchema = z.object({
   talentOrder: tagList.default([]),
   weapons: z.array(buildWeapon).max(6).default([]),
   echoCosts: z.array(buildEcho).max(8).default([]),
+  /** 关键命座效果描述（可选）：推荐几命、每命提升什么 */
+  nodeNotes: optionalText,
   echoSet: optionalText,
   echoFirst: optionalText,
   substatOrder: optionalText,
