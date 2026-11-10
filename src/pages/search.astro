@@ -3,10 +3,10 @@ import BaseLayout from '../components/BaseLayout.astro';
 import { withBase } from '../lib/urls';
 ---
 
-<BaseLayout title="搜索" description="搜索《鸣潮》单角色攻略与配队推荐。" noindex>
+<BaseLayout title="搜索" description="搜索《鸣潮》配队推荐与角色面板。" noindex>
   <section class="page-head">
     <p class="eyebrow">搜索</p>
-    <h1>搜索攻略与配队</h1>
+    <h1>搜索配队</h1>
     <p class="lede">
       索引在构建时生成、在浏览器本地检索，不会把关键词发到任何服务器。可以用「角色」和「配队体系」两个下拉筛选缩小范围。
     </p>
@@ -15,7 +15,7 @@ import { withBase } from '../lib/urls';
   <div class="search-box">
     <!-- Pagefind 组件 UI：所有组件默认共享 default 实例，会自动联动 -->
     <pagefind-config preload></pagefind-config>
-    <pagefind-input placeholder="搜索角色名、攻略标题、配队思路…"></pagefind-input>
+    <pagefind-input placeholder="搜索角色名、配队名、武器或声骸…"></pagefind-input>
 
     <div class="search-filters">
       <pagefind-filter-dropdown filter="character" label="按角色筛选" sort="alphabetical"></pagefind-filter-dropdown>
