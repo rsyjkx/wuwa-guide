@@ -139,6 +139,22 @@ const guides = defineCollection({
   }),
 });
 
+/** 配队面板：每个位置一段（声骸 / 武器 / 加点），对应"一图流"里的一排 */
+const buildMember = z.object({
+  /** 位置：一号位 / 二号位 / 可替换 */
+  slot: requiredText,
+  /** 角色名 */
+  character: requiredText,
+  echoSet: optionalText,
+  echoCosts: z.array(buildEcho).max(8).default([]),
+  echoFirst: optionalText,
+  substatOrder: optionalText,
+  /** 额外需求，例如"共鸣效率需求 250%" */
+  requirement: optionalText,
+  weapons: z.array(buildWeapon).max(6).default([]),
+  talentOrder: tagList.default([]),
+});
+
 const memberSchema = z.object({
   /** 成员角色名 */
   name: requiredText,
@@ -171,6 +187,8 @@ const teams = defineCollection({
     video: optionalUrl,
     /** 视频出处（可选）：视频作者 / 攻略组，标注来源用 */
     videoCredit: optionalText,
+    /** 配队面板（可选）：每个位置一段，渲染成"一图流" */
+    buildMembers: z.array(buildMember).max(8).default([]),
   }),
 });
 
