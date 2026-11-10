@@ -12,8 +12,10 @@ export async function getStaticPaths() {
 }
 
 const { guide } = Astro.props;
-const { title, character, author, date, tags, version, cover, images, video } = guide.data;
-const { Content } = await render(guide);
+const { title, character, author, date, tags, version, cover, images, video, videoCredit } = guide.data;
+const { Content, headings } = await render(guide);
+// 只取二级标题做"本篇目录"，让固定的章节结构（毕业面板/武器/声骸/配队/命座/技能加点）一眼可见
+const sections = headings.filter((heading) => heading.depth === 2);
 ---
 
 <BaseLayout title={title} description={`${character} 单角色攻略：${title}`}>
@@ -50,6 +52,21 @@ const { Content } = await render(guide);
       )
     }
 
+    {
+      sections.length >= 2 && (
+        <nav class="toc" aria-label="本篇目录" data-pagefind-ignore>
+          <p class="toc__title">本篇目录</p>
+          <ol>
+            {sections.map((section) => (
+              <li>
+                <a href={`#${section.slug}`}>{section.text}</a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      )
+    }
+
     <div class="prose">
       <Content />
     </div>
@@ -61,6 +78,7 @@ const { Content } = await render(guide);
         <section class="media-block" data-pagefind-ignore>
           <h2>视频讲解</h2>
           <VideoEmbed url={video} title={`${title} 视频`} />
+          {videoCredit && <p class="hint">出处：{videoCredit}</p>}
         </section>
       )
     }
