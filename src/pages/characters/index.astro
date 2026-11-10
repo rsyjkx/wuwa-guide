@@ -17,7 +17,7 @@ const characters = allCharacters(teams);
 
   {
     characters.length === 0 ? (
-      <p class="empty">还没有内容，欢迎到<a href={withBase('/submit/')}>投稿页</a>提交第一支配队。</p>
+      <p class="empty">还没有内容，提交第一支配队。</p>
     ) : (
       <div class="character-grid">
         {characters.map((character) => (
