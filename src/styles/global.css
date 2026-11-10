@@ -1253,3 +1253,28 @@ textarea {
   color: var(--accent);
   border-bottom-color: var(--accent);
 }
+
+/* ---------- 正文图片：每个章节都可以直接插图 ---------- */
+.prose img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1rem 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--panel);
+}
+
+.prose img.is-zoomable {
+  cursor: zoom-in;
+}
+
+.prose figure {
+  margin: 1rem 0;
+}
+
+.prose figcaption {
+  margin-top: 0.4rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
