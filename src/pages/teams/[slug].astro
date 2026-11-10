@@ -37,9 +37,7 @@ const hasTopTier = tier ? /^t0(\.5)?$/i.test(tier.trim()) : false;
         </li>
         {scenario.map((item) => <li class="chip">{item}</li>)}
         {(team.data.tags ?? []).map((tag) => (
-          <li class="chip chip--tag">
-            <a href={`${import.meta.env.BASE_URL}teams/?tag=${encodeURIComponent(tag)}`}>{tag}</a>
-          </li>
+          <li class="chip chip--tag">{tag}</li>
         ))}
         {images.length > 0 && <li class="chip">图集 {images.length} 张</li>}
         {video && <li class="chip">含视频</li>}
