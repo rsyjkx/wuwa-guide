@@ -4,28 +4,26 @@ import BaseLayout from '../../components/BaseLayout.astro';
 import { allCharacters } from '../../lib/characters';
 import { withBase } from '../../lib/urls';
 
-const [guides, teams] = await Promise.all([getCollection('guides'), getCollection('teams')]);
-const characters = allCharacters(guides, teams);
+const teams = await getCollection('teams');
+const characters = allCharacters(teams);
 ---
 
-<BaseLayout title="角色列表" description="按角色浏览《鸣潮》攻略与配队。" noindex>
+<BaseLayout title="角色列表" description="按角色浏览《鸣潮》配队推荐。" noindex>
   <section class="page-head">
     <p class="eyebrow">角色</p>
     <h1>角色列表</h1>
-    <p class="lede">共 {characters.length} 个角色，点进去可以看该角色的攻略和以他/她为核心的配队。</p>
+    <p class="lede">共 {characters.length} 个角色，点进去可以看以他/她为核心的配队。</p>
   </section>
 
   {
     characters.length === 0 ? (
-      <p class="empty">还没有内容，欢迎到<a href={withBase('/submit/')}>投稿页</a>提交第一篇攻略。</p>
+      <p class="empty">还没有内容，欢迎到<a href={withBase('/submit/')}>投稿页</a>提交第一支配队。</p>
     ) : (
       <div class="character-grid">
         {characters.map((character) => (
           <a class="character-card" href={character.path}>
             <strong>{character.name}</strong>
-            <span>
-              攻略 {character.guideCount} · 配队 {character.teamCount}
-            </span>
+            <span>配队 {character.teamCount}</span>
           </a>
         ))}
       </div>
