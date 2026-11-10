@@ -1,46 +1,74 @@
 name: 投稿：单角色攻略
-description: 提交一篇《鸣潮》单角色攻略。提交后机器人会自动生成 PR，站长批准合并后才会发布。
+description: 提交一篇《鸣潮》单角色攻略。提交后会进入站长的投稿箱，审核通过才发布。
 title: '[攻略] '
 labels: ['submission']
 body:
   - type: markdown
     attributes:
       value: |
-        填完点 **Submit new issue** 就行，不需要懂 Markdown 文件结构。
-        机器人会自动把你的内容转成站点文件并开一个 Pull Request，等站长批准。
-
-        > 建议先看一眼 [内容规范](https://github.com/rsyjkx/wuwa-guide/blob/main/README.md#6-内容规范)。
+        按下面 5 项填写即可，不需要懂 Markdown。
+        提交后会进入**站长的投稿箱**，由站长决定发布或驳回。
 
   - type: input
     id: guide-title
     attributes:
-      label: 攻略标题
-      description: 会显示在列表和搜索里
-      placeholder: 今汐 2.4 版本输出手法与共鸣链选择
+      label: 标题
+      description: 会显示在列表和搜索结果里
+      placeholder: 今汐 2.4 版本养成与配队攻略
     validations:
       required: true
 
   - type: input
     id: character
     attributes:
-      label: 角色名
-      description: 只写名字，用于角色页筛选
+      label: 角色
+      description: 只写角色名，用于角色页归类
       placeholder: 今汐
     validations:
       required: true
 
-  - type: input
-    id: version
+  - type: textarea
+    id: weapon
     attributes:
-      label: 适用游戏版本（可选）
-      placeholder: '2.4'
+      label: 武器推荐
+      description: 首选武器、替代武器、精炼建议
+      placeholder: |
+        首选：……
+        替代：……
+        说明：……
+    validations:
+      required: true
 
-  - type: input
-    id: tags
+  - type: textarea
+    id: sonata
     attributes:
-      label: 标签（可选）
-      description: 用逗号分隔
-      placeholder: 输出手法, 共鸣链
+      label: 声骸搭配及毕业面板
+      description: 套装、主词条、副词条优先级，以及毕业面板参考值
+      placeholder: |
+        套装：……
+        主词条：……
+        副词条优先级：……
+        毕业面板：攻击力 …… / 暴击 …… / 暴伤 ……
+    validations:
+      required: true
+
+  - type: textarea
+    id: team
+    attributes:
+      label: 配队要求
+      description: 推荐队友、定位、以及队伍对轴的要求
+      placeholder: |
+        队友：主C …… / 副C …… / 治疗 ……
+        轴：……
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: '---'
+  - type: markdown
+    attributes:
+      value: '以下为可选项'
 
   - type: input
     id: author
@@ -48,41 +76,29 @@ body:
       label: 作者昵称（可选）
       placeholder: 洄游的鲸
 
-  - type: textarea
-    id: content
+  - type: input
+    id: version
     attributes:
-      label: 正文（支持 Markdown）
-      description: 建议 300 字以上，用小标题分段
-      placeholder: |
-        ## 起手与循环
-
-        1. ……
-
-        ## 声骸搭配
-
-        ……
-    validations:
-      required: true
+      label: 适用版本（可选）
+      placeholder: '2.4'
 
   - type: input
-    id: cover
+    id: tags
     attributes:
-      label: 封面图链接（可选）
-      description: 图片链接；仓库里的图可以写 /media/xxx.png
-      placeholder: https://… 或 /media/cover.png
+      label: 标签（可选，逗号分隔）
+      placeholder: 输出手法, 声骸
 
   - type: textarea
     id: images
     attributes:
-      label: 图集链接（可选）
-      description: 一行一个，最多 12 张
+      label: 图片链接（可选，一行一个）
+      description: 面板 / 词条 / 伤害截图，先传到图床再粘贴链接
       placeholder: |
         https://…
-        /media/shot-1.png
 
   - type: input
     id: video
     attributes:
       label: 视频链接（可选）
-      description: B 站 / YouTube 链接，或 .mp4 直链
+      description: B 站 / YouTube 链接
       placeholder: https://www.bilibili.com/video/BV…
