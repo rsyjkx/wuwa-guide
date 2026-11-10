@@ -7,7 +7,6 @@ const current = Astro.url.pathname;
 const links = [
   { href: withBase('/'), label: '首页' },
   { href: withBase('/teams/'), label: '配队' },
-  { href: withBase('/submit/'), label: '投稿' },
 ];
 
 function isCurrent(href: string): boolean {
