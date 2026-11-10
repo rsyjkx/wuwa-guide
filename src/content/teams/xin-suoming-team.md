@@ -41,6 +41,7 @@ buildMembers:
     requirement: "共鸣效率需求 250%"
 coreCharacter: "心月狐"
 element: "同奏/导电"
+tags: ["同奏", "导电"]
 tier: "T0"
 scenario: ["常规配队"]
 summary: "测试用"
