@@ -12,6 +12,13 @@ members:
 buildMembers:
   - slot: "一号位"
     character: "心"
+    hp: "28000"
+    attack: "2250"
+    energyRegen: "125%"
+    critRate: "72%"
+    critDamage: "272%"
+    keyNodes: [2, 3, 6]
+    substitute: "长离 / 折枝"
     echoSet: "衍梦照世之心"
     echoCosts:
       - { cost: "COST4", main: "暴击 / 爆伤" }
