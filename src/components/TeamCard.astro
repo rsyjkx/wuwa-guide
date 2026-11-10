@@ -55,6 +55,16 @@ const hasTopTier = tier ? /^t0(\.5)?$/i.test(tier.trim()) : false;
     </ul>
   )}
 
+  {damageTypes.length > 0 && (
+    <ul class="chips" data-damage-chips aria-label="伤害类型">
+      {damageTypes.map((type) => (
+        <li class="chip chip--damage">
+          <button type="button" data-damage-tag={type} title="按伤害类型筛选">{type}</button>
+        </li>
+      ))}
+    </ul>
+  )}
+
   {summary && <p class="muted" style="margin: 0.6rem 0 0; font-size: 0.88rem;">{summary}</p>}
 
   {
