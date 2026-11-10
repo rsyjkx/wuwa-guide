@@ -1,5 +1,5 @@
 ---
-title: "今汐 养成面板（改名测试）"
+title: 今汐 养成面板（一图流）
 character: 今汐
 author: 站内示例
 date: 2026-11-10
