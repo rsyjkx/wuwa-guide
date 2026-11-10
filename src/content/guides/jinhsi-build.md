@@ -1,37 +1,27 @@
 ---
-title: 今汐 养成面板（一图流）
+title: "今汐 养成面板（改名测试）"
 character: 今汐
 author: 站内示例
 date: 2026-11-10
 version: '2.4'
 tags: [养成, 面板]
 build:
-  attack: 2200+
-  critRate: 70%+
-  critDamage: 270%+
-  energyRegen: 120%+
+  attack: "2200+"
+  critRate: "70%+"
+  critDamage: "270%+"
+  energyRegen: "120%+"
   keyNodes: [2, 3, 6]
-  talentOrder: [共鸣回路, 共鸣解放, 变奏, 常态攻击, 共鸣技能]
+  talentOrder: ["共鸣回路", "共鸣解放", "变奏", "常态攻击", "共鸣技能"]
   weapons:
-    - name: 玉阙玄华
-      note: 首选
-    - name: 幽冥的忘忧章
-      note: 次选
-    - name: 掣傀之手
-      note: 替代
-  echoCosts:
-    - { cost: 4 费, main: 暴击 / 爆伤 }
-    - { cost: 3 费, main: 导电加成 }
-    - { cost: 3 费, main: 导电 / 攻击 }
-    - { cost: 1 费, main: 攻击加成 }
-    - { cost: 1 费, main: 攻击加成 }
-  echoSet: 天演渊心
-  echoFirst: 天演渊心（4 费）
-  substatOrder: 双爆 > 攻击% > 共鸣技能 > 其他
-  teams:
-    - 衍梦照世之心 / 镜影流电之瞬 / 羽落空尘之歌
-    - 衍梦照世之心 / 轻云出月 / 茜染怀想之花
-    - 衍梦照世之心 / 浮星祛暗 / 茜染怀想之花
+    - name: "玉阙玄华"
+      note: "首选"
+    - name: "幽冥的忘忧章"
+      note: "次选"
+    - name: "掣傀之手"
+      note: "替代"
+  echoSet: "天演渊心"
+  echoFirst: "天演渊心（4 费）"
+  substatOrder: "双爆 > 攻击% > 共鸣技能 > 其他"
 ---
 
 ## 角色毕业面板
