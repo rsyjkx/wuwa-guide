@@ -13,10 +13,11 @@
 ## 1. 数据流
 
 ```
-游客填表
-  │  POST fields[...]（含蜜罐字段）
+游客提交 GitHub Issue（投稿模板）
+  │  issue-to-pr 工作流解析 → 生成 src/content/**/issue-<N>.md
+  │  → 自动开 Pull Request
   ▼
-Staticman v2 公共实例  ── 校验 allowedFields / requiredFields / 蜜罐
+（可选旧通道）表单 POST → Staticman v2 公共实例  ── 校验 allowedFields / requiredFields / 蜜罐
   │  在仓库里新建 src/content/guides/guide-<时间戳>.md
   │  因为 moderation: true，只创建 Pull Request
   ▼
@@ -345,7 +346,35 @@ Staticman 只能写文本字段，**不能上传文件**；Git 仓库也不适�
 
 ---
 
-## 8. 审核与防滥用
+## 8. 投稿通道、审核与防滥用
+
+### 8.0 当前的投稿方式（重要）
+
+Staticman 公共实例的机器人账号 `staticmanapp` **已被 GitHub 封禁**（API 返回 `User is suspended`），
+所以「网页表单 → Staticman → PR」这条通道在公共实例上已经失效。现在的**主通道**是：
+
+1. 访客点 `/submit/` 的「投稿攻略 / 投稿配队」→ 打开 GitHub Issue 模板
+2. 填完提交 → `.github/workflows/issue-to-pr.yml` 自动解析，生成
+   `src/content/guides/issue-<编号>.md`（或 teams），并开 PR
+3. 你在 PR 上 `Approve` + 合并 → 自动构建发布
+
+**仓库必须打开一个开关**（否则工作流创建 PR 会 403）：
+
+> Settings → Actions → General → Workflow permissions → 勾选
+> **Allow GitHub Actions to create and approve pull requests**
+
+也可以用 API 打开（已在本仓库开启）：
+
+```bash
+curl -X PUT -H "Authorization: Bearer $GH_TOKEN" \
+  https://api.github.com/repos/<你>/<仓库>/actions/permissions/workflow \
+  -d '{"default_workflow_permissions":"write","can_approve_pull_request_reviews":true}'
+```
+
+Staticman 相关配置（`staticman.yml`、表单）**保留未删**：如果你以后自部署 Staticman，改
+`src/config.ts` 的 `endpoint` 就能原地启用表单通道。
+
+
 
 | 机制 | 实现 |
 | --- | --- |
@@ -409,7 +438,8 @@ Staticman 只能写文本字段，**不能上传文件**；Git 仓库也不适�
 7. **没有图片上传**：Staticman 只处理表单文本字段；图片请用外链。
 8. **蜜罐只能挡住简单机器人**，没有验证码（公共实例不开放 reCaptcha 密钥配置）。
 9. **没有真正的文件上传**：图片/视频都是链接（原因见 6.4），图床挂了图片就会失效；B 站嵌入可能被部分广告拦截插件屏蔽。
-10. **审批依赖 GitHub 账号**：只有仓库所有者能批准，且不能批准自己开的 PR（访客投稿不受影响，作者是 staticmanapp）。
+10. **Staticman 公共实例已失效**：机器人账号被封禁，表单通道不可用；已改用 GitHub Issue 模板 + Actions 自动开 PR（访客需要 GitHub 账号）。
+11. **审批依赖 GitHub 账号**：只有仓库所有者能批准，且不能批准自己开的 PR（访客投稿不受影响，作者是 staticmanapp）。
 11. **表单增强依赖 JavaScript**：禁用 JS 时表单仍能提交，但成员行不能增删、也看不到提交结果（会显示 JSON 响应）。
 
 ---
@@ -453,7 +483,7 @@ Staticman 只能写文本字段，**不能上传文件**；Git 仓库也不适�
 | 1 | `npm run dev` 可预览 | ✅ 本地实测 |
 | 2 | `npm run build` 成功并生成 Pagefind 索引 | ✅ 实测：`Indexed 6 pages / 2 filters` |
 | 3 | 两个表单字段与 `staticman.yml` 匹配 | ✅ `npm run check:forms` |
-| 4 | Staticman 开启审核（PR 而非直写） | ✅ `moderation: true`（两段配置均校验） |
+| 4 | 投稿必须经 PR 审核才发布 | ✅ Issue → 自动 PR → 站长批准（实测 PR #2 自动生成并清理）；Staticman 配置保留 `moderation: true` |
 | 5 | 搜索页能搜到已合并内容 | ✅ 用 headless 浏览器实测全文检索返回结果 |
 | 6 | 角色页按角色筛选攻略 | ✅ |
 | 7 | 配队列表展示核心角色与成员定位 | ✅ |
@@ -470,6 +500,7 @@ Staticman 只能写文本字段，**不能上传文件**；Git 仓库也不适�
 | 18 | 390px 移动端无横向溢出 | ✅ 实测 /、攻略详情、配队列表、投稿页 `scrollWidth == innerWidth` |
 | 19 | 合并后的链路可复现 | ✅ `npm run simulate` 生成模拟投稿 → 构建 22 页 → 索引 8 页 → 搜索命中，随后 `--clean` 复原 |
 | 20 | 子路径部署（GitHub Pages 项目站点） | ✅ `BASE_PATH=/wuwa-guide/ npm run build` 后，20 页 288 条站内链接全部可达（0 断链） |
+| 21 | Issue 投稿自动开 PR | ✅ 实测：Issue #1 → 工作流成功 → PR #2 生成 `src/content/guides/issue-1.md`，frontmatter 正确 |
 
 第 4、10、17 条的端到端行为依赖真实 GitHub 仓库：需要你先完成 5.2–5.4 与 8.1，再按 5.5 走一遍投稿 → PR → 批准 → 合并 → 构建的完整链路。
 

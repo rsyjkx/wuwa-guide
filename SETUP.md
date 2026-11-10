@@ -79,31 +79,23 @@ git push -u origin main
 
 ---
 
-## 4. 让 Staticman 有权限（约 5 分钟，**最关键**）
+## 4. 打开 Actions 建 PR 的权限（约 1 分钟，**关键**）
 
-Staticman 是"把表单变成 PR"的那个机器人，它需要你仓库的写权限。
+投稿通道用的是 GitHub 自己的 Actions（Staticman 公共实例的机器人账号已被封禁，表单通道停用）。
+工作流要能创建 PR，需要打开一个开关：
 
-**4.1 加协作者**
+1. 打开 `https://github.com/<你的用户名>/<仓库名>/settings/actions`
+2. 找到 **Workflow permissions**
+3. 选 **Read and write permissions**
+4. 勾上 **Allow GitHub Actions to create and approve pull requests**
+5. 点 **Save**
 
-1. 打开 `https://github.com/<你的用户名>/<仓库名>/settings/access`
-2. 点 **Add people**
-3. 输入 **`staticmanapp`** → 选择 → 权限选 **Write** → 发送邀请
-4. 这个账号会自动接受
+> 这个仓库已经用 API 帮你打开过了，换仓库时需要重做一次。
 
-**4.2 完成实例授权**
+✅ 成功的样子：这一页两个选项都选中；之后在 Issues 里投稿时，Actions 能自动开出 PR。
 
-用浏览器打开（把两处换成你的）：
-
-```
-https://best.staticman.net/v2/connect/<你的用户名>/<仓库名>
-```
-
-- 看到成功页 = 完成
-- 如果提示要安装 GitHub App：按页面提示把 Staticman 的 App 安装到你这个仓库，效果一样
-
-> 为什么不是 `api.staticman.net`？那个域名已经无法解析了，官方公共实例现在叫 `best.staticman.net`，接口协议完全一致。项目默认就用它，改的话只改 `src/config.ts` 里 `STATICMAN.endpoint` 一行。
-
-✅ 成功的样子：Settings → Collaborators 列表里能看到 `staticmanapp`；`/v2/connect/...` 页面没有报错。
+> 附：如果你以后自部署了 Staticman，再按旧流程把它的机器人账号加为 Write 协作者并访问
+> `https://<你的实例>/v2/connect/<你>/<仓库>`，然后把 `src/config.ts` 的 `STATICMAN.endpoint` 指过去即可（`staticman.yml` 和表单都还留着）。
 
 ---
 
@@ -196,12 +188,12 @@ npm run protect -- --apply       # 真正写入
 
 ## 7. 走一遍完整验收（约 5 分钟）
 
-1. 打开 `https://<你的域名>/submit/`，提交一条测试攻略（正文 ≥30 字）
-2. GitHub → **Pull requests** 出现新 PR，作者是 `staticmanapp`；**main 分支没有新文件**
+1. 打开站点 `/submit/`，点「投稿攻略」，按模板填完提交（会打开 GitHub 的 Issue 页面）
+2. 大约 30 秒后，GitHub → **Pull requests** 出现新 PR（文件是 `src/content/guides/issue-<编号>.md`）；**main 分支没有新文件**
 3. 打开 PR → **Files changed** → **Review changes** → **Approve** → **Merge pull request**
-4. Cloudflare 自动重新构建（约 1–2 分钟）
+4. Actions 自动重新构建（1–2 分钟）
 5. 构建完成后：内容出现在列表 / 角色页，搜索页能搜到
-6. 再提交一条，这次直接 **Close pull request**，确认线上没有变化
+6. 再投稿一条，这次直接 **Close pull request**，确认线上没有变化
 
 ✅ 到这里账号绑定就全部完成，之后日常只需要：**看 PR → 批准 → 合并**。
 
@@ -211,7 +203,7 @@ npm run protect -- --apply       # 真正写入
 
 | 现象 | 原因 / 处理 |
 | --- | --- |
-| 提交后页面报网络错误 | 公共实例挂了或限流，稍后重试；也可以直接在 GitHub 新建文件（提交页有链接） |
+| 投稿后没有出现 PR | 检查 Settings → Actions → 是否勾了 "Allow GitHub Actions to create and approve pull requests"；再看 Actions 里 issue-to-pr 的日志 |
 | 提示提交成功，但 GitHub 上没有 PR | ① 仓库名/分支和 `src/config.ts` 不一致 ② `staticmanapp` 没加成功 ③ 没做第 4.2 步的 connect 授权 |
 | PR 里文件路径不对 | 检查 `staticman.yml` 的 `path`（应为 `src/content/guides` / `src/content/teams`） |
 | Merge 按钮是灰的 | 分支保护生效，用**站长账号**点 Approve（GitHub 不允许批准自己开的 PR） |
@@ -228,7 +220,7 @@ npm run protect -- --apply       # 真正写入
 | 账号 | 作用 | 是否必需 | 费用 |
 | --- | --- | --- | --- |
 | GitHub | 存内容、开 PR、你批准合并、Pages 托管 | **必需** | 免费 |
-| Staticman 公共实例 | 把表单提交变成 PR | 必需（免注册） | 免费 |
+| Staticman 公共实例 | 旧表单通道（机器人账号已被封禁，已停用） | 不需要 | 免费 |
 | Cloudflare Pages | 另一种托管方式（大陆访问不稳） | 可选 | 免费（每月 500 次构建） |
 
 合计 **0 元/月**。
