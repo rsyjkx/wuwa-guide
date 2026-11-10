@@ -120,6 +120,7 @@ const buildMember = z.object({
   /** 下位替代（可选）：没有这个角色时可以用谁 */
   substitute: optionalText,
   /** 毕业面板数值（每个成员一张小面板） */
+  hp: optionalText,
   attack: optionalText,
   critRate: optionalText,
   critDamage: optionalText,
