@@ -61,8 +61,8 @@ coreCharacter: "心月狐"
 element: "导电"
 tier: "T0"
 scenario: ["常规配队"]
+damageTypes: ["共鸣技能"]
 tags: ["同奏", "导电"]
-damageTypes: ["共鸣解放", "共鸣技能"]
 summary: "测试用"
 author: "站内示例"
 syncBody: true
