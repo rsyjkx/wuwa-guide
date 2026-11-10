@@ -1599,3 +1599,13 @@ textarea {
 [hidden] {
   display: none !important;
 }
+
+
+.chip--tag {
+  border-color: rgba(108, 193, 255, 0.45);
+}
+
+.chip--tag a {
+  color: var(--accent);
+  text-decoration: none;
+}
