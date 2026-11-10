@@ -9,7 +9,6 @@ const teams = sortTeams(await getCollection('teams'));
 const systems = filters.systems ?? [];
 const elements = filters.elements ?? [];
 const characters = filters.characters ?? [];
-const damageTypes = filters.damageTypes ?? [];
 ---
 
 <BaseLayout title="配队推荐" description="《鸣潮》配队推荐，可按体系、属性、角色筛选。" noindex>
@@ -48,14 +47,6 @@ const damageTypes = filters.damageTypes ?? [];
             </div>
           </div>
         )}
-        {damageTypes.length > 0 && (
-          <div class="filter__row">
-            <span class="filter__label">伤害类型</span>
-            <div class="filter__chips" data-group="damage">
-              {damageTypes.map((value) => <button type="button" class="chip filter__chip" data-value={value}>{value}</button>)}
-            </div>
-          </div>
-        )}
         <div class="filter__row">
           <span class="filter__label"></span>
           <button type="button" class="btn btn--ghost" data-filter-reset>清除筛选</button>
@@ -88,12 +79,10 @@ const damageTypes = filters.damageTypes ?? [];
         const s = list(card, 'systems');
         const e = list(card, 'elements');
         const c = list(card, 'chars');
-      const d = list(card, 'damage');
         const ok =
           (selected.system.size === 0 || [...selected.system].some((v) => s.includes(v))) &&
           (selected.element.size === 0 || [...selected.element].some((v) => e.includes(v))) &&
-          (selected.char.size === 0 || [...selected.char].some((v) => c.includes(v))) &&
-        (selected.damage.size === 0 || [...selected.damage].some((v) => d.includes(v)));
+          (selected.char.size === 0 || [...selected.char].some((v) => c.includes(v)));
         card.hidden = !ok;
         if (ok) visible += 1;
       }
