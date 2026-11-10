@@ -1,6 +1,6 @@
 ---
 title: 心同奏配队一图流
-teamName: "心同奏配队（一图流）"
+teamName: "心同奏配队"
 date: 2026-11-10
 members:
   - name: "心"
@@ -28,14 +28,6 @@ buildMembers:
       - { cost: "COST1", main: "攻击加成" }
     echoFirst: "天演溯心"
     substatOrder: "双爆 > 攻击% > 共鸣技能 > 其他"
-    weapons:
-      - name: "玉阙玄华"
-        note: "首选"
-      - name: "幽冥的忘忧章"
-        note: "次选"
-      - name: "掣傀之手"
-        note: "替代"
-    talentOrder: ["共鸣回路", "共鸣解放", "变奏", "普攻", "共鸣技能"]
   - slot: "二号位"
     character: "锁瞑"
     substitute: "今汐"
@@ -77,7 +69,7 @@ syncBody: true
 
 ## 角色及其武器
 
-- 一号位 心：玉阙玄华（首选） > 幽冥的忘忧章（次选） > 掣傀之手（替代）
+- 一号位 心：—
 - 二号位 锁瞑：—
 - 可替换 守岸人：—
 
