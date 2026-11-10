@@ -12,7 +12,6 @@ members:
 buildMembers:
   - slot: "一号位"
     character: "心"
-    substitute: "长离 / 折枝"
     hp: "28000"
     attack: "2250"
     energyRegen: "125%"
@@ -30,10 +29,13 @@ buildMembers:
     echoFirst: "天演溯心"
     substatOrder: "双爆 > 攻击% > 共鸣技能 > 其他"
     weapons:
-      - { name: "玉阙玄华", note: "首选" }
-      - { name: "幽冥的忘忧章", note: "次选" }
-      - { name: "掣傀之手", note: "替代" }
-    talentOrder: [共鸣回路, 共鸣解放, 变奏, 普攻, 共鸣技能]
+      - name: "玉阙玄华"
+        note: "首选"
+      - name: "幽冥的忘忧章"
+        note: "次选"
+      - name: "掣傀之手"
+        note: "替代"
+    talentOrder: ["共鸣回路", "共鸣解放", "变奏", "普攻", "共鸣技能"]
   - slot: "二号位"
     character: "锁瞑"
     substitute: "今汐"
@@ -47,7 +49,7 @@ buildMembers:
     substatOrder: "双爆 > 攻击% > 普攻 > 共鸣效率"
   - slot: "可替换"
     character: "守岸人"
-    substitute: "维"
+    substitute: "维里奈"
     hp: "40000"
     attack: "无"
     energyRegen: "260"
@@ -65,9 +67,9 @@ buildMembers:
     requirement: "共鸣效率需求 250%"
 coreCharacter: "心月狐"
 element: "同奏/导电"
-tags: ["同奏", "导电"]
 tier: "T0"
 scenario: ["常规配队"]
+tags: ["同奏", "导电"]
 summary: "测试用"
 author: "站内示例"
 syncBody: true
@@ -75,10 +77,12 @@ syncBody: true
 
 ## 角色及其武器
 
+- 一号位 心：玉阙玄华（首选） > 幽冥的忘忧章（次选） > 掣傀之手（替代）
 - 二号位 锁瞑：—
 - 可替换 守岸人：—
 
 ## 声骸选择
 
+- 一号位 心：套装 衍梦照世之心；首位 天演溯心；副词条 双爆 > 攻击% > 共鸣技能 > 其他
 - 二号位 锁瞑：首位 绝息魄；副词条 双爆 > 攻击% > 普攻 > 共鸣效率
 - 可替换 守岸人：套装 隐世回光；首位 无归的谬误；副词条 共鸣效率 > 生命 > 其他；共鸣效率需求 250%
