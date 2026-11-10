@@ -2,6 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../components/BaseLayout.astro';
 import Gallery from '../../components/Gallery.astro';
+import BuildCard from '../../components/BuildCard.astro';
 import VideoEmbed from '../../components/VideoEmbed.astro';
 import { characterPath, formatDate } from '../../lib/characters';
 import { assetUrl } from '../../lib/urls';
@@ -12,7 +13,7 @@ export async function getStaticPaths() {
 }
 
 const { guide } = Astro.props;
-const { title, character, author, date, tags, version, cover, images, video, videoCredit } = guide.data;
+const { title, character, author, date, tags, version, cover, images, video, videoCredit, build } = guide.data;
 const { Content, headings } = await render(guide);
 // 只取二级标题做"本篇目录"，让固定的章节结构（毕业面板/武器/声骸/配队/命座/技能加点）一眼可见
 const sections = headings.filter((heading) => heading.depth === 2);
@@ -51,6 +52,8 @@ const sections = headings.filter((heading) => heading.depth === 2);
         </figure>
       )
     }
+
+    {build && <BuildCard build={build} character={character} />}
 
     {
       sections.length >= 2 && (
