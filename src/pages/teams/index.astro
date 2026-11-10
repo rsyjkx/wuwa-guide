@@ -1,126 +1,112 @@
----
+﻿---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../components/BaseLayout.astro';
 import TeamCard from '../../components/TeamCard.astro';
+import filters from '../../data/filters.json';
 import { sortTeams } from '../../lib/characters';
-import { withBase } from '../../lib/urls';
 
 const teams = sortTeams(await getCollection('teams'));
-
-/** 标签：队伍自己的 tags + 体系（都作为筛选维度，去重排序） */
-const tagSet = new Set<string>();
-for (const team of teams) {
-  for (const tag of team.data.tags) tagSet.add(tag);
-  if (team.data.element) tagSet.add(team.data.element);
-}
-const allTags = [...tagSet].sort((a, b) => a.localeCompare(b, 'zh-CN'));
-
-/** 可筛选的角色：只统计"成员"（下位替代不算） */
-const charSet = new Set<string>();
-for (const team of teams) {
-  for (const member of team.data.members) charSet.add(member.name);
-}
-const allCharacters = [...charSet].sort((a, b) => a.localeCompare(b, 'zh-CN'));
+const systems = filters.systems ?? [];
+const elements = filters.elements ?? [];
+const characters = filters.characters ?? [];
 ---
 
-<BaseLayout title="配队推荐" description="《鸣潮》配队推荐，按标签（体系 / 属性）和队伍角色筛选。" noindex>
+<BaseLayout title="配队推荐" description="《鸣潮》配队推荐，可按体系、属性、角色筛选。" noindex>
   <section class="page-head">
     <p class="eyebrow">配队</p>
     <h1>配队推荐</h1>
-    <p class="lede">共 {teams.length} 支队伍。点标签或角色即可筛选；下位替代不参与角色筛选。</p>
+    <p class="lede">共 {teams.length} 支队伍。点体系 / 属性 / 角色筛选（同组内"或"，组间"且"）。</p>
   </section>
 
-  {
-    teams.length === 0 ? (
-      <p class="empty">还没有配队。</p>
-    ) : (
-      <>
-        <section class="filter" data-filter aria-label="筛选">
+  {teams.length === 0 ? (
+    <p class="empty">还没有配队。</p>
+  ) : (
+    <>
+      <section class="filter" data-filter aria-label="筛选">
+        {systems.length > 0 && (
           <div class="filter__row">
-            <span class="filter__label">标签</span>
-            <div class="filter__chips" data-filter-tags>
-              {allTags.map((tag) => (
-                <button type="button" class="chip filter__chip" data-value={tag}>
-                  {tag}
-                </button>
-              ))}
+            <span class="filter__label">体系</span>
+            <div class="filter__chips" data-group="system">
+              {systems.map((value) => <button type="button" class="chip filter__chip" data-value={value}>{value}</button>)}
             </div>
           </div>
+        )}
+        {elements.length > 0 && (
+          <div class="filter__row">
+            <span class="filter__label">属性</span>
+            <div class="filter__chips" data-group="element">
+              {elements.map((value) => <button type="button" class="chip filter__chip" data-value={value}>{value}</button>)}
+            </div>
+          </div>
+        )}
+        {characters.length > 0 && (
           <div class="filter__row">
             <span class="filter__label">角色</span>
-            <div class="filter__chips" data-filter-chars>
-              {allCharacters.map((name) => (
-                <button type="button" class="chip filter__chip" data-value={name}>
-                  {name}
-                </button>
-              ))}
+            <div class="filter__chips" data-group="char">
+              {characters.map((value) => <button type="button" class="chip filter__chip" data-value={value}>{value}</button>)}
             </div>
           </div>
-          <div class="filter__row">
-            <span class="filter__label"></span>
-            <button type="button" class="btn btn--ghost" data-filter-reset>清除筛选</button>
-            <span class="muted" data-filter-count>
-              显示 {teams.length} / {teams.length}
-            </span>
-          </div>
-        </section>
-
-        <div class="grid" data-team-grid>
-          {teams.map((team) => (
-            <TeamCard team={team} />
-          ))}
+        )}
+        <div class="filter__row">
+          <span class="filter__label"></span>
+          <button type="button" class="btn btn--ghost" data-filter-reset>清除筛选</button>
+          <span class="muted" data-filter-count>显示 {teams.length} / {teams.length}</span>
         </div>
-        <p class="empty" data-filter-empty hidden>没有符合条件（标签和角色同时满足）的配队。</p>
-      </>
-    )
-  }
+      </section>
+
+      <div class="grid" data-team-grid>
+        {teams.map((team) => <TeamCard team={team} />)}
+      </div>
+      <p class="empty" data-filter-empty hidden>没有符合条件的配队。</p>
+    </>
+  )}
 </BaseLayout>
 
 <script>
-  const root = document.querySelector<HTMLElement>('[data-filter]');
-  const grid = document.querySelector<HTMLElement>('[data-team-grid]');
-  const empty = document.querySelector<HTMLElement>('[data-filter-empty]');
-  const count = document.querySelector<HTMLElement>('[data-filter-count]');
+  const root = document.querySelector('[data-filter]');
+  const grid = document.querySelector('[data-team-grid]');
+  const empty = document.querySelector('[data-filter-empty]');
+  const count = document.querySelector('[data-filter-count]');
 
   if (root && grid) {
-    const cards = [...grid.querySelectorAll<HTMLElement>('.card')];
-    const selected = { tag: new Set<string>(), char: new Set<string>() };
-
-    const readList = (card: HTMLElement, key: string) =>
-      (card.dataset[key] ?? '').split('|').filter(Boolean);
+    const cards = [...grid.querySelectorAll('.card')];
+    const selected = { system: new Set(), element: new Set(), char: new Set() };
+    const list = (card, key) => (card.dataset[key] ?? '').split('|').filter(Boolean);
 
     const apply = () => {
       let visible = 0;
       for (const card of cards) {
-        const tags = readList(card, 'tags');
-        const chars = readList(card, 'chars');
-        const tagOk = selected.tag.size === 0 || [...selected.tag].some((tag) => tags.includes(tag));
-        const charOk = selected.char.size === 0 || [...selected.char].some((name) => chars.includes(name));
-        const show = tagOk && charOk;
-        card.hidden = !show;
-        if (show) visible += 1;
+        const s = list(card, 'systems');
+        const e = list(card, 'elements');
+        const c = list(card, 'chars');
+        const ok =
+          (selected.system.size === 0 || [...selected.system].some((v) => s.includes(v))) &&
+          (selected.element.size === 0 || [...selected.element].some((v) => e.includes(v))) &&
+          (selected.char.size === 0 || [...selected.char].some((v) => c.includes(v)));
+        card.hidden = !ok;
+        if (ok) visible += 1;
       }
-      if (count) count.textContent = `显示 ${visible} / ${cards.length}`;
+      if (count) count.textContent = '显示 ' + visible + ' / ' + cards.length;
       if (empty) empty.hidden = visible !== 0;
-      for (const chip of root.querySelectorAll<HTMLElement>('[data-value]')) {
-        const group = chip.closest('[data-filter-tags]') ? 'tag' : 'char';
-        chip.classList.toggle('is-active', selected[group].has(chip.dataset.value ?? ''));
+      for (const chip of root.querySelectorAll('[data-value]')) {
+        const group = chip.closest('[data-group]')?.dataset.group ?? '';
+        chip.classList.toggle('is-active', Boolean(selected[group]?.has(chip.dataset.value ?? '')));
       }
     };
 
     root.addEventListener('click', (event) => {
-      const chip = (event.target as HTMLElement).closest<HTMLElement>('[data-value]');
+      const chip = event.target.closest('[data-value]');
       if (chip) {
-        const group = chip.closest('[data-filter-tags]') ? 'tag' : 'char';
+        const group = chip.closest('[data-group]')?.dataset.group ?? '';
         const value = chip.dataset.value ?? '';
+        if (!selected[group]) return;
         if (selected[group].has(value)) selected[group].delete(value);
         else selected[group].add(value);
         apply();
         return;
       }
-      if ((event.target as HTMLElement).closest('[data-filter-reset]')) {
-        selected.tag.clear();
-        selected.char.clear();
+      if (event.target.closest('[data-filter-reset]')) {
+        for (const key of Object.keys(selected)) selected[key].clear();
         apply();
       }
     });
