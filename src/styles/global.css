@@ -1538,3 +1538,64 @@ textarea {
   font-size: 0.78rem;
   color: #ffd6aa;
 }
+
+
+/* ---------- 配队筛选 ---------- */
+.filter {
+  display: grid;
+  gap: 0.55rem;
+  margin: 1rem 0 1.6rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--panel);
+}
+
+.filter__row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.filter__label {
+  min-width: 3rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.filter__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.filter__chip {
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  transition: all 0.12s ease;
+}
+
+.filter__chip:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.filter__chip.is-active {
+  border-color: var(--accent);
+  background: rgba(108, 193, 255, 0.16);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.filter__chip.is-active::before {
+  content: '✓ ';
+}
+
+/* .card 等元素有自己的 display，hidden 属性会被覆盖，这里强制生效 */
+[hidden] {
+  display: none !important;
+}
