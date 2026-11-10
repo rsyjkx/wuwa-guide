@@ -55,6 +55,7 @@ const { Content } = await render(guide);
     </div>
 
     <!-- 媒体区块不参与搜索索引：图片没有可索引文字，视频 iframe 更不该进索引 -->
+
     {
       video && (
         <section class="media-block" data-pagefind-ignore>

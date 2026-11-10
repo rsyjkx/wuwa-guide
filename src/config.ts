@@ -82,6 +82,23 @@ export function issueTemplateUrl(kind: SubmissionKind): string {
   return `https://github.com/${STATICMAN.username}/${STATICMAN.repository}/issues/new?template=${template}`;
 }
 
+/**
+ * 仓库里某个内容文件的 GitHub 操作链接。
+ *   blob   → 查看
+ *   edit   → 网页编辑
+ *   delete → 网页删除（会走 GitHub 的删除确认页）
+ * 只有仓库所有者 / 协作者点了才有效果，其他人会看到 404 或只读页面。
+ */
+export function repoFileUrl(
+  kind: SubmissionKind,
+  id: string,
+  action: 'blob' | 'edit' | 'delete',
+): string {
+  const dir = kind === 'guides' ? 'src/content/guides' : 'src/content/teams';
+  const base = `https://github.com/${STATICMAN.username}/${STATICMAN.repository}`;
+  return `${base}/${action}/${STATICMAN.branch}/${dir}/${id}.md`;
+}
+
 /** 表单里的可选项（只做输入建议，schema 不做枚举限制，方便以后加新体系/新定位）。 */
 export const ELEMENT_SUGGESTIONS = [
   '冷凝',

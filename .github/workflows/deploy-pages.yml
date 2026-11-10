@@ -40,16 +40,27 @@ jobs:
       - name: 表单与 staticman.yml 一致性检查
         run: npm run check:forms
 
-      - name: 计算 BASE_PATH
+      - name: 计算 BASE_PATH 与站点地址
         id: base
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          set -euo pipefail
           OWNER="${GITHUB_REPOSITORY%%/*}"
           NAME="${GITHUB_REPOSITORY#*/}"
-          if [ "$NAME" = "${OWNER}.github.io" ]; then
+          CUSTOM="$(gh api "repos/${GITHUB_REPOSITORY}/pages" --jq '.cname // ""' 2>/dev/null || echo "")"
+
+          if [ -n "$CUSTOM" ]; then
             echo "value=/" >> "$GITHUB_OUTPUT"
+            echo "site=https://$CUSTOM" >> "$GITHUB_OUTPUT"
+            echo "检测到自定义域名 $CUSTOM → 使用根路径"
+          elif [ "$NAME" = "${OWNER}.github.io" ]; then
+            echo "value=/" >> "$GITHUB_OUTPUT"
+            echo "site=https://${OWNER}.github.io" >> "$GITHUB_OUTPUT"
             echo "使用根路径（仓库名 = ${OWNER}.github.io）"
           else
             echo "value=/${NAME}/" >> "$GITHUB_OUTPUT"
+            echo "site=https://${OWNER}.github.io/${NAME}" >> "$GITHUB_OUTPUT"
             echo "使用子路径 /${NAME}/"
           fi
 
@@ -57,6 +68,7 @@ jobs:
         run: npm run build
         env:
           BASE_PATH: ${{ steps.base.outputs.value }}
+          SITE_URL: ${{ steps.base.outputs.site }}
 
       - uses: actions/upload-pages-artifact@v3
         with:

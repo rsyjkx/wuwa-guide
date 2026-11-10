@@ -5,7 +5,8 @@ import { defineConfig } from 'astro/config';
 // 之后由 pagefind 生成浏览器端搜索索引，再交给 Cloudflare Pages 托管。
 export default defineConfig({
   // 部署后请改成你的正式域名（用于 canonical 等绝对地址）
-  site: 'https://rsyjkx.github.io/wuwa-guide',
+  // 部署后可改这里；GitHub Pages 的 deploy-pages 工作流会用 SITE_URL 覆盖（自定义域名/项目站点）
+  site: process.env.SITE_URL ?? 'https://rsyjkx.github.io/wuwa-guide',
   output: 'static',
   /**
    * 部署到子路径时（例如 GitHub Pages 项目站点 /<repo>/）设置 BASE_PATH：
