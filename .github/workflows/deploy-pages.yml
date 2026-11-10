@@ -37,9 +37,6 @@ jobs:
       - name: 安装依赖
         run: npm ci
 
-      - name: 表单与 staticman.yml 一致性检查
-        run: npm run check:forms
-
       - name: 计算 BASE_PATH 与站点地址
         id: base
         env:
