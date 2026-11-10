@@ -1,5 +1,5 @@
 ---
-import { characterPath, formatDate, isMainRole, teamPath, type Team } from '../lib/characters';
+import { formatDate, isMainRole, teamPath, type Team } from '../lib/characters';
 import { assetUrl } from '../lib/urls';
 
 interface Props {
@@ -28,7 +28,7 @@ const hasTopTier = tier ? /^t0(\.5)?$/i.test(tier.trim()) : false;
   <p class="card__meta">
     {tier && <span class={`tier ${hasTopTier ? 'tier--top' : ''}`}>{tier}</span>}
     {showElement && <span class="chip">{element}</span>}
-    <a class="chip chip--accent" href={characterPath(coreCharacter)}>核心 · {coreCharacter}</a>
+    <span class="chip chip--accent">核心 · {coreCharacter}</span>
     {date && <time datetime={date.toISOString()}>{formatDate(date)}</time>}
   </p>
 
