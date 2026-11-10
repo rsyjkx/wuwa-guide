@@ -8,6 +8,11 @@ import { assetUrl } from '../lib/urls';
 interface BuildMember {
   slot: string;
   character: string;
+  attack?: string;
+  critRate?: string;
+  critDamage?: string;
+  energyRegen?: string;
+  keyNodes: number[];
   echoSet?: string;
   echoCosts: { cost: string; main: string }[];
   echoFirst?: string;
@@ -33,6 +38,19 @@ const { members, teamName } = Astro.props;
             <p class="team-build__slot">{member.slot}</p>
             <p class="team-build__name">{member.character}</p>
             {member.echoSet && <p class="team-build__set">{member.echoSet}</p>}
+            {(member.attack || member.critRate || member.critDamage || member.energyRegen) && (
+              <ul class="build-stats" style="margin-top: 0.45rem">
+                {member.attack && <li><span>攻击</span><strong>{member.attack}</strong></li>}
+                {member.energyRegen && <li><span>共鸣效率</span><strong>{member.energyRegen}</strong></li>}
+                {member.critRate && <li><span>暴击</span><strong>{member.critRate}</strong></li>}
+                {member.critDamage && <li><span>暴伤</span><strong>{member.critDamage}</strong></li>}
+              </ul>
+            )}
+            {member.keyNodes.length > 0 && (
+              <ul class="build-nodes" style="margin-top: 0.4rem">
+                {member.keyNodes.map((node) => <li>{node} 链</li>)}
+              </ul>
+            )}
           </div>
 
           <div class="team-build__echo">
