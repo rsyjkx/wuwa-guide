@@ -94,6 +94,14 @@ const characters = filters.characters ?? [];
       }
     };
 
+    // 支持从卡片标签跳过来：/teams/?tag=同奏
+    const params = new URLSearchParams(location.search);
+    const presetTag = params.get('tag');
+    const presetChar = params.get('char');
+    if (presetTag) selected.system.add(presetTag);
+    if (presetChar) selected.char.add(presetChar);
+    if (presetTag || presetChar) apply();
+
     root.addEventListener('click', (event) => {
       const chip = event.target.closest('[data-value]');
       if (chip) {
