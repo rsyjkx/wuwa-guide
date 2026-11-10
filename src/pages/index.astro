@@ -1,32 +1,23 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../components/BaseLayout.astro';
-import GuideCard from '../components/GuideCard.astro';
 import TeamCard from '../components/TeamCard.astro';
 import { SITE } from '../config';
-import { allCharacters, latestGuides, latestTeams } from '../lib/characters';
+import { allCharacters, latestTeams } from '../lib/characters';
 import { withBase } from '../lib/urls';
 
-const [guides, teams] = await Promise.all([getCollection('guides'), getCollection('teams')]);
-const characters = allCharacters(guides, teams);
-// 首页只展示真正有内容的角色（有攻略或以他/她为核心配队），
-// 只当过队友的角色在 /characters/ 里仍然能查到。
-const featuredCharacters = characters.filter(
-  (character) => character.guideCount > 0 || character.teamCount > 0,
-);
-const newestGuides = latestGuides(guides, 6);
-const newestTeams = latestTeams(teams, 3);
+const teams = await getCollection('teams');
+const characters = allCharacters(teams).filter((character) => character.teamCount > 0);
+const newestTeams = latestTeams(teams, 6);
 ---
 
 <BaseLayout noindex>
   <section class="page-head">
     <p class="eyebrow">{SITE.title}</p>
-    <h1>按角色查攻略，按体系找配队</h1>
-    <p class="lede" style="max-width: 60ch;">
-      {SITE.description}
-    </p>
+    <h1>按角色找配队</h1>
+    <p class="lede" style="max-width: 60ch;">{SITE.description}</p>
     <div class="form-actions" style="margin-top: 1rem;">
-      <a class="btn" href={withBase('/search/')}>搜索攻略 / 配队</a>
+      <a class="btn" href={withBase('/search/')}>搜索配队</a>
       <a class="btn btn--ghost" href={withBase('/submit/')}>我要投稿</a>
     </div>
   </section>
@@ -37,35 +28,15 @@ const newestTeams = latestTeams(teams, 3);
       <a href={withBase('/characters/')}>查看全部角色 →</a>
     </div>
     {
-      featuredCharacters.length === 0 ? (
-        <p class="empty">还没有任何角色攻略，欢迎投稿第一篇。</p>
+      characters.length === 0 ? (
+        <p class="empty">还没有配队，欢迎投稿第一支。</p>
       ) : (
         <div class="character-grid">
-          {featuredCharacters.map((character) => (
+          {characters.map((character) => (
             <a class="character-card" href={character.path}>
               <strong>{character.name}</strong>
-              <span>
-                攻略 {character.guideCount} · 配队 {character.teamCount}
-              </span>
+              <span>配队 {character.teamCount}</span>
             </a>
-          ))}
-        </div>
-      )
-    }
-  </section>
-
-  <section class="section" aria-labelledby="guides-title">
-    <div class="section__head">
-      <h2 id="guides-title">最新单角色攻略</h2>
-      <a href={withBase('/guides/')}>全部攻略 →</a>
-    </div>
-    {
-      newestGuides.length === 0 ? (
-        <p class="empty">暂无攻略。</p>
-      ) : (
-        <div class="grid">
-          {newestGuides.map((guide) => (
-            <GuideCard guide={guide} />
           ))}
         </div>
       )
