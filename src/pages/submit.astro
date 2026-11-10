@@ -4,24 +4,17 @@ import { SITE } from '../config';
 
 const EMAIL = '3587287943@qq.com';
 
-const mailSubject = `【投稿】鸣潮攻略 / 配队 - 你的昵称`;
+const mailSubject = `【投稿】鸣潮配队 - 你的昵称`;
 
 const mailBody = [
-  '【角色攻略】',
-  '1. 角色：',
-  '2. 角色毕业面板：',
-  '3. 武器推荐：',
-  '4. 声骸搭配：',
-  '5. 配队推荐：',
-  '6. 命座简介（1–6 命逐个写）：',
-  '7. 技能加点优先级（共鸣技能 / 共鸣解放 / 共鸣回路 / 常态攻击 / 变奏技能）：',
-  '',
-  '【配队攻略】',
   '1. 配队名称：',
   '2. 核心角色：',
-  '3. 角色及其武器：',
-  '4. 声骸选择：',
-  '5. 配队操作流程视频链接（请标明出处）：',
+  '3. 成员（角色名 | 定位）：',
+  '4. 角色及其武器：',
+  '5. 声骸选择：',
+  '6. 每个位置的面板（攻击 / 暴击 / 爆伤 / 共鸣效率 / 关键共鸣链）：',
+  '7. 加点推荐：',
+  '8. 配队操作流程视频链接（请标明出处）：',
   '',
   '【可选】',
   '作者昵称：',
@@ -54,19 +47,7 @@ const mailto = `mailto:${EMAIL}?subject=${encodeURIComponent(mailSubject)}&body=
     <p class="hint" style="margin: 0.6rem 0 0;" data-copy-status role="status" aria-live="polite"></p>
   </section>
 
-  <h2>角色攻略写这 6 个章节</h2>
-  <ol class="prose" style="max-width: 62ch;">
-    <li><strong>角色毕业面板</strong>：攻击力 / 暴击 / 暴伤 / 共鸣效率的参考区间</li>
-    <li><strong>武器推荐</strong>：首选 / 替代 / 精炼建议</li>
-    <li><strong>声骸搭配</strong>：套装、主词条、副词条优先级</li>
-    <li><strong>配队推荐</strong>：推荐队友、定位、对轴要点</li>
-    <li><strong>命座简介</strong>：1–6 命逐个写，各自提升什么、值不值得抽</li>
-    <li>
-      <strong>技能加点优先级</strong>：五个技能 —— 共鸣技能、共鸣解放、共鸣回路、常态攻击、变奏技能，按优先级从高到低排
-    </li>
-  </ol>
-
-  <h2>配队攻略写这 2 个章节 + 一段视频</h2>
+  <h2>配队攻略写这几项</h2>
   <ol class="prose" style="max-width: 62ch;">
     <li><strong>角色及其武器</strong>：每个成员用什么武器、为什么</li>
     <li><strong>声骸选择</strong>：每个成员套装与词条，可写替代方案</li>
@@ -91,28 +72,20 @@ const mailto = `mailto:${EMAIL}?subject=${encodeURIComponent(mailSubject)}&body=
 
   <p class="hint" style="margin-top: 1.5rem;">
     站内也可以直接看
-    <a href={`${import.meta.env.BASE_URL}guides/`}>全部攻略</a>、
     <a href={`${import.meta.env.BASE_URL}teams/`}>配队推荐</a>。
   </p>
 </BaseLayout>
 
 <script>
   const email = '3587287943@qq.com';
-  const template = `【角色攻略】
-1. 角色：
-2. 角色毕业面板：
-3. 武器推荐：
-4. 声骸搭配：
-5. 配队推荐：
-6. 命座简介（1–6 命逐个写）：
-7. 技能加点优先级（共鸣技能 / 共鸣解放 / 共鸣回路 / 常态攻击 / 变奏技能）：
-
-【配队攻略】
-1. 配队名称：
+  const template = `1. 配队名称：
 2. 核心角色：
-3. 角色及其武器：
-4. 声骸选择：
-5. 配队操作流程视频链接（请标明出处）：
+3. 成员（角色名 | 定位）：
+4. 角色及其武器：
+5. 声骸选择：
+6. 每个位置的面板（攻击 / 暴击 / 爆伤 / 共鸣效率 / 关键共鸣链）：
+7. 加点推荐：
+8. 配队操作流程视频链接（请标明出处）：
 
 【可选】
 作者昵称：
