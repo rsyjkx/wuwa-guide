@@ -1,5 +1,9 @@
-// @ts-check
+﻿// @ts-check
 import { defineConfig } from 'astro/config';
+import rehypeBaseImages from './src/lib/rehype-base-images.mjs';
+
+// 正文图片的 /media/... 需要补上部署子路径（GitHub Pages 项目站点）
+const basePath = process.env.BASE_PATH && process.env.BASE_PATH !== '/' ? process.env.BASE_PATH : '/';
 
 // 纯静态站点：无 adapter、无 SSR。构建产物是 dist/ 下的 HTML，
 // 之后由 pagefind 生成浏览器端搜索索引，再交给 Cloudflare Pages 托管。
@@ -15,7 +19,11 @@ export default defineConfig({
    */
   base: process.env.BASE_PATH && process.env.BASE_PATH !== '/' ? process.env.BASE_PATH : undefined,
   trailingSlash: 'ignore',
+  markdown: {
+    rehypePlugins: [[rehypeBaseImages, { base: basePath }]],
+  },
   build: {
     format: 'directory',
   },
 });
+
