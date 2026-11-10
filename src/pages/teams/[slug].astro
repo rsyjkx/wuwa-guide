@@ -5,7 +5,7 @@ import MemberList from '../../components/MemberList.astro';
 import Gallery from '../../components/Gallery.astro';
 import TeamBuildCard from '../../components/TeamBuildCard.astro';
 import VideoEmbed from '../../components/VideoEmbed.astro';
-import { characterPath, formatDate } from '../../lib/characters';
+import { formatDate } from '../../lib/characters';
 import { assetUrl } from '../../lib/urls';
 
 export async function getStaticPaths() {
@@ -33,7 +33,7 @@ const hasTopTier = tier ? /^t0(\.5)?$/i.test(tier.trim()) : false;
         <li class="chip chip--accent">
           <span>核心</span>
           <!-- 过滤器值取自元素文本，所以 data-pagefind-filter 只包住角色名，避免把"核心 · "也写进索引 -->
-          <a href={characterPath(coreCharacter)} data-pagefind-filter="character">{coreCharacter}</a>
+          <span>{coreCharacter}</span>
         </li>
         {scenario.map((item) => <li class="chip">{item}</li>)}
         {images.length > 0 && <li class="chip">图集 {images.length} 张</li>}
@@ -45,7 +45,6 @@ const hasTopTier = tier ? /^t0(\.5)?$/i.test(tier.trim()) : false;
       <p class="meta-line">
         {date && <time datetime={date.toISOString()}>{formatDate(date)}</time>}
         {author && <span>作者：{author}</span>}
-        <a href={characterPath(coreCharacter)}>查看 {coreCharacter} 的角色页 →</a>
       </p>
     </header>
 
