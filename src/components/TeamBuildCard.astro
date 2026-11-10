@@ -8,6 +8,7 @@ import { assetUrl } from '../lib/urls';
 interface BuildMember {
   slot: string;
   character: string;
+  substitute?: string;
   attack?: string;
   critRate?: string;
   critDamage?: string;
@@ -37,6 +38,7 @@ const { members, teamName } = Astro.props;
           <div class="team-build__who">
             <p class="team-build__slot">{member.slot}</p>
             <p class="team-build__name">{member.character}</p>
+            {member.substitute && <p class="team-build__sub">下位替代：{member.substitute}</p>}
             {member.echoSet && <p class="team-build__set">{member.echoSet}</p>}
             {(member.attack || member.critRate || member.critDamage || member.energyRegen) && (
               <ul class="build-stats" style="margin-top: 0.45rem">
