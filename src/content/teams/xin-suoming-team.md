@@ -10,6 +10,30 @@ members:
   - name: "守岸人"
     role: "治疗 / 辅助"
 buildMembers:
+  - slot: "一号位"
+    character: "心"
+    substitute: "长离 / 折枝"
+    hp: "28000"
+    attack: "2250"
+    energyRegen: "125%"
+    critRate: "72%"
+    critDamage: "272%"
+    keyNodes: [2, 3, 6]
+    nodeNotes: "2 命：质变，建议抽；3 命：数值提升；6 命：氪金考虑"
+    echoSet: "衍梦照世之心"
+    echoCosts:
+      - { cost: "COST4", main: "暴击 / 爆伤" }
+      - { cost: "COST3", main: "导电 / 攻击" }
+      - { cost: "COST3", main: "导电加成" }
+      - { cost: "COST1", main: "攻击加成" }
+      - { cost: "COST1", main: "攻击加成" }
+    echoFirst: "天演溯心"
+    substatOrder: "双爆 > 攻击% > 共鸣技能 > 其他"
+    weapons:
+      - { name: "玉阙玄华", note: "首选" }
+      - { name: "幽冥的忘忧章", note: "次选" }
+      - { name: "掣傀之手", note: "替代" }
+    talentOrder: [共鸣回路, 共鸣解放, 变奏, 普攻, 共鸣技能]
   - slot: "二号位"
     character: "锁瞑"
     substitute: "今汐"
