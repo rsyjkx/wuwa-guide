@@ -1472,3 +1472,62 @@ textarea {
   background: rgba(255, 255, 255, 0.04);
   font-size: 0.84rem;
 }
+
+/* ---------- 配队一图流：每个位置一排 ---------- */
+.team-build {
+  display: grid;
+  gap: 0.9rem;
+  margin: 1.2rem 0 1.8rem;
+}
+
+.team-build__row {
+  display: grid;
+  grid-template-columns: minmax(150px, 0.8fr) minmax(220px, 1.2fr) minmax(240px, 1.3fr);
+  gap: 1rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) + 2px);
+  background: linear-gradient(180deg, rgba(255, 214, 170, 0.06), transparent 60%), var(--panel);
+}
+
+@media (max-width: 860px) {
+  .team-build__row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.team-build__slot {
+  margin: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+}
+
+.team-build__name {
+  margin: 0.2rem 0 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.team-build__set {
+  margin: 0.25rem 0 0;
+  font-size: 0.82rem;
+  color: var(--accent);
+}
+
+.team-build__echo,
+.team-build__gear {
+  min-width: 0;
+}
+
+.build-note--strong {
+  color: #ffd6aa;
+}
+
+.team-build .build-weapons li {
+  width: 84px;
+}
+
+.team-build .build-order li {
+  font-size: 0.8rem;
+}
