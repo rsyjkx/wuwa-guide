@@ -1,33 +1,18 @@
 ---
-import { getCollection } from 'astro:content';
-import BaseLayout from '../../components/BaseLayout.astro';
-import GuideCard from '../../components/GuideCard.astro';
-import { sortGuides } from '../../lib/characters';
+// 单角色攻略已经并入配队，旧链接统一跳到配队列表
 import { withBase } from '../../lib/urls';
-
-const guides = sortGuides(await getCollection('guides'));
+const target = withBase('/teams/');
 ---
 
-<BaseLayout title="全部攻略" description="《鸣潮》全部单角色攻略列表。" noindex>
-  <section class="page-head">
-    <p class="eyebrow">攻略</p>
-    <h1>全部单角色攻略</h1>
-    <p class="lede">
-      共 {guides.length} 篇。想按角色查看，可以从<a href={withBase('/characters/')}>角色列表</a>进入；想全文搜索，用<a
-        href={withBase('/search/')}>搜索页</a
-      >。
-    </p>
-  </section>
-
-  {
-    guides.length === 0 ? (
-      <p class="empty">还没有攻略，欢迎到<a href={withBase('/submit/')}>投稿页</a>提交第一篇。</p>
-    ) : (
-      <div class="grid">
-        {guides.map((guide) => (
-          <GuideCard guide={guide} />
-        ))}
-      </div>
-    )
-  }
-</BaseLayout>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>正在跳转到配队推荐</title>
+    <meta http-equiv="refresh" content={`0; url=${target}`} />
+    <meta name="robots" content="noindex" />
+    <link rel="canonical" href={target} />
+  </head>
+  <body>
+    <p>单角色攻略已并入配队页面，正在跳转… <a href={target}>点这里</a></p>
+  </body>
+</html>
