@@ -1531,3 +1531,10 @@ textarea {
 .team-build .build-order li {
   font-size: 0.8rem;
 }
+
+
+.team-build__sub {
+  margin: 0.3rem 0 0;
+  font-size: 0.78rem;
+  color: #ffd6aa;
+}
