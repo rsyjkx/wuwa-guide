@@ -13,8 +13,9 @@ export async function getStaticPaths() {
 }
 
 const { team } = Astro.props;
-const { teamName, coreCharacter, members, element, tier, scenario, summary, author, date, cover, images, video } = team.data;
-const { Content } = await render(team);
+const { teamName, coreCharacter, members, element, tier, scenario, summary, author, date, cover, images, video, videoCredit } = team.data;
+const { Content, headings } = await render(team);
+const sections = headings.filter((heading) => heading.depth === 2);
 const hasTopTier = tier ? /^t0(\.5)?$/i.test(tier.trim()) : false;
 ---
 
@@ -65,6 +66,21 @@ const hasTopTier = tier ? /^t0(\.5)?$/i.test(tier.trim()) : false;
       <MemberList members={members} />
     </section>
 
+    {
+      sections.length >= 2 && (
+        <nav class="toc" aria-label="本篇目录" data-pagefind-ignore>
+          <p class="toc__title">本篇目录</p>
+          <ol>
+            {sections.map((section) => (
+              <li>
+                <a href={`#${section.slug}`}>{section.text}</a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      )
+    }
+
     <div class="prose">
       <Content />
     </div>
@@ -74,6 +90,7 @@ const hasTopTier = tier ? /^t0(\.5)?$/i.test(tier.trim()) : false;
         <section class="media-block" data-pagefind-ignore>
           <h2>演示视频</h2>
           <VideoEmbed url={video} title={`${teamName} 演示视频`} />
+          {videoCredit && <p class="hint">出处：{videoCredit}</p>}
         </section>
       )
     }
