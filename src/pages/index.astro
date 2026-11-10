@@ -3,11 +3,10 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../components/BaseLayout.astro';
 import TeamCard from '../components/TeamCard.astro';
 import { SITE } from '../config';
-import { allCharacters, latestTeams } from '../lib/characters';
+import { latestTeams } from '../lib/characters';
 import { withBase } from '../lib/urls';
 
 const teams = await getCollection('teams');
-const characters = allCharacters(teams).filter((character) => character.teamCount > 0);
 const newestTeams = latestTeams(teams, 6);
 ---
 
@@ -20,27 +19,6 @@ const newestTeams = latestTeams(teams, 6);
       <a class="btn" href={withBase('/search/')}>搜索配队</a>
       <a class="btn btn--ghost" href={withBase('/submit/')}>我要投稿</a>
     </div>
-  </section>
-
-  <section class="section" aria-labelledby="characters-title">
-    <div class="section__head">
-      <h2 id="characters-title">角色</h2>
-      <a href={withBase('/characters/')}>查看全部角色 →</a>
-    </div>
-    {
-      characters.length === 0 ? (
-        <p class="empty">还没有配队，欢迎投稿第一支。</p>
-      ) : (
-        <div class="character-grid">
-          {characters.map((character) => (
-            <a class="character-card" href={character.path}>
-              <strong>{character.name}</strong>
-              <span>配队 {character.teamCount}</span>
-            </a>
-          ))}
-        </div>
-      )
-    }
   </section>
 
   <section class="section" aria-labelledby="teams-title">
