@@ -1,0 +1,43 @@
+---
+/**
+ * 正文图片灯箱。
+ *
+ * Markdown 里写的图片（`![说明](链接)`）默认是普通 <img>，点开只有原图。
+ * 这里复用图集那套原生 <dialog> 灯箱：点正文图片 → 弹大图，Esc / 点遮罩关闭。
+ * 没有原生 dialog 的旧浏览器直接新标签页打开。
+ */
+---
+
+<dialog class="lightbox" data-prose-lightbox aria-label="图片预览">
+  <img data-prose-lightbox-image alt="" referrerpolicy="no-referrer" />
+  <button type="button" class="lightbox__close" data-prose-lightbox-close aria-label="关闭预览">×</button>
+</dialog>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('[data-prose-lightbox]');
+  const preview = document.querySelector<HTMLImageElement>('[data-prose-lightbox-image]');
+
+  if (dialog && preview) {
+    for (const image of document.querySelectorAll<HTMLImageElement>('.prose img')) {
+      // 已经被链接包住的图片保留跳转行为，不抢点击
+      if (image.closest('a')) continue;
+      image.classList.add('is-zoomable');
+
+      image.addEventListener('click', () => {
+        if (typeof dialog.showModal !== 'function') {
+          window.open(image.currentSrc || image.src, '_blank', 'noopener');
+          return;
+        }
+        preview.src = image.currentSrc || image.src;
+        preview.alt = image.alt;
+        dialog.showModal();
+      });
+    }
+
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+    dialog.querySelector('[data-prose-lightbox-close]')?.addEventListener('click', () => dialog.close());
+    dialog.addEventListener('close', () => preview.removeAttribute('src'));
+  }
+</script>
