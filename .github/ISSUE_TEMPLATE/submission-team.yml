@@ -1,0 +1,108 @@
+name: 投稿：配队推荐
+description: 提交一支《鸣潮》配队。提交后机器人会自动生成 PR，站长批准合并后才会发布。
+title: '[配队] '
+labels: ['submission']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        填完点 **Submit new issue** 就行。机器人会自动转成站点文件并开 Pull Request，等站长批准。
+
+        > 成员请按「角色名 | 定位」一行一个填写，定位常用：主C / 副C / 辅助 / 治疗。
+
+  - type: input
+    id: team-name
+    attributes:
+      label: 配队名称
+      placeholder: 今汐聚爆速切队
+    validations:
+      required: true
+
+  - type: input
+    id: core-character
+    attributes:
+      label: 核心角色
+      description: 角色页的「相关配队」按这个字段关联
+      placeholder: 今汐
+    validations:
+      required: true
+
+  - type: input
+    id: element
+    attributes:
+      label: 体系 / 属性
+      description: 例如 冷凝 / 热熔 / 聚爆 / 风蚀 / 湮灭
+      placeholder: 聚爆
+    validations:
+      required: true
+
+  - type: input
+    id: tier
+    attributes:
+      label: 强度分级（可选，仅展示）
+      placeholder: T0.5
+
+  - type: textarea
+    id: members
+    attributes:
+      label: 成员（每行一个：角色名 | 定位）
+      placeholder: |
+        今汐 | 主C
+        长离 | 副C
+        维里奈 | 治疗
+    validations:
+      required: true
+
+  - type: input
+    id: scenario
+    attributes:
+      label: 适用场景（可选）
+      description: 用逗号分隔
+      placeholder: 逆境深塔, 冥歌海墟
+
+  - type: input
+    id: summary
+    attributes:
+      label: 一句话说明（可选）
+      placeholder: 双爆发核互相接轴，深渊与海墟通用。
+
+  - type: textarea
+    id: content
+    attributes:
+      label: 正文（支持 Markdown）
+      description: 配队思路、输出轴、注意事项
+      placeholder: |
+        ## 配队思路
+
+        ……
+
+        ## 输出轴
+
+        1. ……
+    validations:
+      required: true
+
+  - type: input
+    id: author
+    attributes:
+      label: 作者昵称（可选）
+      placeholder: 空山
+
+  - type: input
+    id: cover
+    attributes:
+      label: 封面图链接（可选）
+      placeholder: https://… 或 /media/team-cover.png
+
+  - type: textarea
+    id: images
+    attributes:
+      label: 图集链接（可选，一行一个）
+      placeholder: |
+        https://…
+
+  - type: input
+    id: video
+    attributes:
+      label: 视频链接（可选）
+      placeholder: https://www.bilibili.com/video/BV…

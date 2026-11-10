@@ -6,6 +6,7 @@ import {
   ROLE_SUGGESTIONS,
   SCENARIO_OPTIONS,
   TIER_SUGGESTIONS,
+  issueTemplateUrl,
   newFileUrl,
   staticmanAction,
   staticmanReady,
@@ -42,14 +43,19 @@ const initialRows = [0, 1, 2];
     )
   }
 
-  <p class="notice">
-    表单提交走 Staticman（会自动开 PR）。如果 Staticman 暂时不可用，也可以直接在 GitHub 上新建文件：<a
-      href={newFileUrl('guides')}
-      target="_blank"
-      rel="noopener">新建攻略文件</a
-    >
-    ·
-    <a href={newFileUrl('teams')} target="_blank" rel="noopener">新建配队文件</a>（字段规范见 README）。
+  <section class="notice notice--ok" style="margin-bottom: 1rem;">
+    <p style="margin: 0 0 0.6rem;"><strong>推荐：用 GitHub 模板投稿</strong>（不需要懂文件结构，提交后会自动开 PR，站长批准即发布）</p>
+    <div class="form-actions">
+      <a class="btn" href={issueTemplateUrl('guides')} target="_blank" rel="noopener">投稿攻略</a>
+      <a class="btn" href={issueTemplateUrl('teams')} target="_blank" rel="noopener">投稿配队</a>
+      <a class="btn btn--ghost" href={newFileUrl('guides')} target="_blank" rel="noopener">直接编辑 Markdown</a>
+    </div>
+    <p class="hint" style="margin: 0.6rem 0 0;">需要 GitHub 账号；本站不保存任何登录信息。</p>
+  </section>
+
+  <p class="notice notice--warn">
+    以下表单依赖 Staticman 公共实例（机器人账号 <code>staticmanapp</code> 已被 GitHub 封禁，提交大概率失败）。
+    仅在你自部署了 Staticman 时才值得使用；否则请用上面的 GitHub 模板投稿。
   </p>
 
   <div data-tabs>

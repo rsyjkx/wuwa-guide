@@ -73,6 +73,15 @@ export function newFileUrl(kind: SubmissionKind): string {
   return `https://github.com/${STATICMAN.username}/${STATICMAN.repository}/new/${STATICMAN.branch}/${dir}`;
 }
 
+/**
+ * Issue 投稿模板地址（Staticman 不可用时的主通道）。
+ * 访客点开就是填好的表单，提交后由 issue-to-pr 工作流自动开 PR。
+ */
+export function issueTemplateUrl(kind: SubmissionKind): string {
+  const template = kind === 'guides' ? 'submission-guide.yml' : 'submission-team.yml';
+  return `https://github.com/${STATICMAN.username}/${STATICMAN.repository}/issues/new?template=${template}`;
+}
+
 /** 表单里的可选项（只做输入建议，schema 不做枚举限制，方便以后加新体系/新定位）。 */
 export const ELEMENT_SUGGESTIONS = [
   '冷凝',
