@@ -62,7 +62,7 @@ export function staticmanAction(kind: SubmissionKind): string {
 
 /** 占位符还没替换时，提交页会显示提醒。 */
 export const staticmanReady =
-  STATICMAN.username !== 'YOUR_GITHUB_USER' && STATICMAN.repository !== 'YOUR_REPO';
+  String(STATICMAN.username) !== 'YOUR_GITHUB_USER' && String(STATICMAN.repository) !== 'YOUR_REPO';
 
 /**
  * 兜底入口：直接在 GitHub 网页上新建文件（表单提交不了时用）。
