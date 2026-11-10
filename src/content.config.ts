@@ -134,6 +134,8 @@ const buildMember = z.object({
       z.array(z.coerce.number().int().min(1).max(6)).max(6),
     )
     .default([]),
+  /** 关键命座效果描述（可选） */
+  nodeNotes: optionalText,
   echoSet: optionalText,
   echoCosts: z.array(buildEcho).max(8).default([]),
   echoFirst: optionalText,
