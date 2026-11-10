@@ -3,7 +3,7 @@ title: 心月狐 养成面板（一图流）
 character: 心
 author: 站内示例
 date: 2026-11-10
-version: '2.4'
+version: '3.7'
 tags: [养成, 面板]
 build:
   attack: 2200+
