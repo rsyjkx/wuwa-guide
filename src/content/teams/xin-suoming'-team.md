@@ -27,16 +27,6 @@ buildMembers:
       - { cost: "COST1", main: "攻击加成" }
     echoFirst: "天演溯心"
     substatOrder: "双爆 > 攻击% > 共鸣技能 > 其他"
-    weapons:
-      - name: "玉阙玄华"
-        note: "首选"
-      - name: "幽冥的忘忧章"
-        note: "次选"
-      - name: "掣傀之手"
-        note: "替代"
-      - name: "曙光"
-        note: "可用"
-    talentOrder: ["共鸣回路", "共鸣解放", "普攻", "变奏", "共鸣技能"]
   - slot: "二号位"
     character: "锁瞑"
     echoCosts:
@@ -47,12 +37,6 @@ buildMembers:
       - { cost: "COST1", main: "攻击加成" }
     echoFirst: "绝息魄"
     substatOrder: "双爆 > 攻击% > 普攻击 > 共鸣效率"
-    weapons:
-      - name: "专武"
-        note: "首选"
-      - name: "千古洑流"
-        note: "次选"
-    talentOrder: ["共鸣回路", "共鸣解放", "共鸣技能", "普攻", "变奏"]
   - slot: "可替换"
     character: "守岸人"
     echoSet: "隐世回光"
@@ -65,14 +49,6 @@ buildMembers:
     echoFirst: "无归的谬误"
     substatOrder: "共鸣效率 > 生命 > 其他"
     requirement: "共鸣效率需求 250%"
-    weapons:
-      - name: "星序协响"
-        note: "首选"
-      - name: "奇幻变奏"
-        note: "次选"
-      - name: "渊海回声"
-        note: "替代"
-    talentOrder: ["共鸣解放", "共鸣技能", "变奏", "共鸣回路", "普攻"]
 ---
 
 ## 角色及其武器
