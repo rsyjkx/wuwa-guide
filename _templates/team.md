@@ -31,3 +31,22 @@ videoCredit: '' # 视频出处，例如：B 站 @某某某
 <!-- 每个成员的套装、主词条、副词条，以及是否有替代方案 -->
 
 ![声骸搭配](/media/example-shot-2.svg)
+
+<!-- 每个位置的面板：一图流里那三排 -->
+buildMembers:
+  - slot: 一号位
+    character: ''
+    attack: ''
+    critRate: ''
+    critDamage: ''
+    energyRegen: ''
+    keyNodes: []
+    echoSet: ''
+    echoCosts:
+      - { cost: COST4, main: 暴击 / 爆伤 }
+    echoFirst: ''
+    substatOrder: ''
+    requirement: ''
+    weapons:
+      - { name: '', note: '', image: '' }
+    talentOrder: []
