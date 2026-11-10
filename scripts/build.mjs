@@ -67,20 +67,4 @@ if (build.status !== 0) {
   process.exit(build.status ?? 1);
 }
 
-const pagefind = run('pagefind index', [
-  resolve(rootDir, 'node_modules/pagefind/lib/runner/bin.cjs'),
-  '--site',
-  resolve(rootDir, 'dist'),
-]);
-
-if (pagefind.status !== 0) {
-  const output = `${pagefind.stdout ?? ''}${pagefind.stderr ?? ''}`;
-  // 内容被删空时 Pagefind 可能返回 1 或 101，都不应该让部署失败
-  if (contentCount === 0 || output.includes('not able to build an index')) {
-    console.warn('\n⚠ 当前没有可索引的内容（攻略/配队都被删了？），跳过搜索索引。');
-    console.warn('  搜索页会显示"索引未生成"的提示；恢复内容后重新构建即可。');
-    process.exit(0);
-  }
-  console.error(`\n✗ pagefind 失败（exit ${pagefind.status ?? 'null'}）`);
-  process.exit(pagefind.status ?? 1);
-}
+console.log("\n▶ 搜索索引已移除（改用标签/角色筛选）");
