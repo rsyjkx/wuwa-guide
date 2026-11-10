@@ -58,7 +58,7 @@ buildMembers:
     substatOrder: "共鸣效率 > 生命 > 其他"
     requirement: "共鸣效率需求 250%"
 coreCharacter: "心月狐"
-element: "同奏/导电"
+element: "导电"
 tier: "T0"
 scenario: ["常规配队"]
 tags: ["同奏", "导电"]
