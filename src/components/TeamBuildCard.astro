@@ -9,6 +9,7 @@ interface BuildMember {
   slot: string;
   character: string;
   substitute?: string;
+  hp?: string;
   attack?: string;
   critRate?: string;
   critDamage?: string;
@@ -40,8 +41,9 @@ const { members, teamName } = Astro.props;
             <p class="team-build__name">{member.character}</p>
             {member.substitute && <p class="team-build__sub">下位替代：{member.substitute}</p>}
             {member.echoSet && <p class="team-build__set">{member.echoSet}</p>}
-            {(member.attack || member.critRate || member.critDamage || member.energyRegen) && (
+            {(member.hp || member.attack || member.critRate || member.critDamage || member.energyRegen) && (
               <ul class="build-stats" style="margin-top: 0.45rem">
+                {member.hp && <li><span>生命</span><strong>{member.hp}</strong></li>}
                 {member.attack && <li><span>攻击</span><strong>{member.attack}</strong></li>}
                 {member.energyRegen && <li><span>共鸣效率</span><strong>{member.energyRegen}</strong></li>}
                 {member.critRate && <li><span>暴击</span><strong>{member.critRate}</strong></li>}
