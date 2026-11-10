@@ -11,12 +11,13 @@ interface Props {
 const { team, showElement = true } = Astro.props;
 const { teamName, coreCharacter, members, element, tier, scenario, summary, date, cover, tags } = team.data;
 // 筛选用的数据：标签 = tags + 体系；角色 = 成员（不含下位替代）
-const filterTags = [...new Set([...tags, element].filter(Boolean))].join('|');
+const filterSystems = [...new Set(tags)].join('|');
+const filterElements = [...new Set([element, ...tags].filter(Boolean))].join('|');
 const filterChars = members.map((member) => member.name).join('|');
 const hasTopTier = tier ? /^t0(\.5)?$/i.test(tier.trim()) : false;
 ---
 
-<article class="card" data-tags={filterTags} data-chars={filterChars}>
+<article class="card" data-systems={filterSystems} data-elements={filterElements} data-chars={filterChars}>
   {
     cover && (
       <a class="card__cover" href={teamPath(team)} tabindex="-1" aria-hidden="true">
