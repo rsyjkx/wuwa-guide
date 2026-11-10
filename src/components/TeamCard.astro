@@ -11,8 +11,8 @@ interface Props {
 const { team, showElement = true } = Astro.props;
 const { teamName, coreCharacter, members, element, tier, scenario, summary, date, cover, tags, damageTypes } = team.data;
 // 卡片展示：标签（去掉与"属性"重复的）+ 伤害类型；角色只算成员，不含下位替代
-const tagChips = [...new Set([...tags.filter((tag) => tag && tag !== element), ...(damageTypes ?? [])])];
-const filterSystems = [...new Set(tags.filter((tag) => tag && tag !== element))].join('|');
+const tagChips = [...new Set([element, ...tags, ...(damageTypes ?? [])].filter(Boolean))];
+const filterSystems = [...new Set([element, ...tags].filter(Boolean))].join('|');
 const filterElements = element ?? '';
 const filterChars = members.map((member) => member.name).join('|');
 const filterDamage = [...new Set(damageTypes ?? [])].join('|');
@@ -30,7 +30,6 @@ const hasTopTier = tier ? /^t0(\.5)?$/i.test(tier.trim()) : false;
   <h3 class="card__title"><a href={teamPath(team)}>{teamName}</a></h3>
   <p class="card__meta">
     {tier && <span class={`tier ${hasTopTier ? 'tier--top' : ''}`}>{tier}</span>}
-    {showElement && <span class="chip">{element}</span>}
     <span class="chip chip--accent">核心 · {coreCharacter}</span>
     {date && <time datetime={date.toISOString()}>{formatDate(date)}</time>}
   </p>
