@@ -1,4 +1,4 @@
----
+﻿---
 import { SITE } from '../config';
 import { withBase } from '../lib/urls';
 
@@ -7,7 +7,6 @@ const current = Astro.url.pathname;
 const links = [
   { href: withBase('/'), label: '首页' },
   { href: withBase('/teams/'), label: '配队' },
-  { href: withBase('/characters/'), label: '角色' },
   { href: withBase('/search/'), label: '搜索' },
   { href: withBase('/submit/'), label: '投稿' },
 ];
@@ -32,3 +31,4 @@ function isCurrent(href: string): boolean {
     </nav>
   </div>
 </header>
+
