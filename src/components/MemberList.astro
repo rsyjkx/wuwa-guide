@@ -1,0 +1,33 @@
+---
+import { characterPath, isMainRole } from '../lib/characters';
+
+interface Member {
+  name: string;
+  role: string;
+}
+
+interface Props {
+  members: Member[];
+  /** 成员名链接到角色页（仓库里没有该角色时仍然会生成角色页，所以总是可点） */
+  linkToCharacter?: boolean;
+}
+
+const { members, linkToCharacter = true } = Astro.props;
+---
+
+<ul class="members">
+  {
+    members.map((member) => (
+      <li class={`member ${isMainRole(member.role) ? 'member--main' : ''}`}>
+        <span class="member__role">{member.role}</span>
+        {linkToCharacter ? (
+          <a class="member__name" href={characterPath(member.name)}>
+            {member.name}
+          </a>
+        ) : (
+          <span class="member__name">{member.name}</span>
+        )}
+      </li>
+    ))
+  }
+</ul>

@@ -1,0 +1,31 @@
+name: validate
+
+# 投稿 PR 会在合并前跑一次完整构建：
+# - Zod schema 校验不过 → PR 变红，站长一眼就能看到
+# - 表单字段和 staticman.yml 不匹配 → 同上
+# 公共仓库的 GitHub Actions 免费额度足够这个流程。
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: 安装依赖
+        run: npm ci
+
+      - name: 表单字段与 staticman.yml 一致性检查
+        run: npm run check:forms
+
+      - name: 构建站点（含 Pagefind 索引）
+        run: npm run build

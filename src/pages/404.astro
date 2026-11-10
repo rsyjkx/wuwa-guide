@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../components/BaseLayout.astro';
+import { withBase } from '../lib/urls';
+---
+
+<BaseLayout title="页面不存在" description="404 页面不存在。" noindex>
+  <section class="center-box">
+    <p class="eyebrow">404</p>
+    <h1>这个页面不存在</h1>
+    <p class="lede">可能是链接过期了，也可能是那篇攻略还在审核中。</p>
+    <div class="form-actions" style="justify-content: center; margin-top: 1rem;">
+      <a class="btn" href={withBase('/')}>回到首页</a>
+      <a class="btn btn--ghost" href={withBase('/search/')}>去搜索</a>
+    </div>
+  </section>
+</BaseLayout>

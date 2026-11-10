@@ -1,0 +1,76 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../components/BaseLayout.astro';
+import Gallery from '../../components/Gallery.astro';
+import VideoEmbed from '../../components/VideoEmbed.astro';
+import { characterPath, formatDate } from '../../lib/characters';
+import { assetUrl } from '../../lib/urls';
+
+export async function getStaticPaths() {
+  const guides = await getCollection('guides');
+  return guides.map((guide) => ({ params: { slug: guide.id }, props: { guide } }));
+}
+
+const { guide } = Astro.props;
+const { title, character, author, date, tags, version, cover, images, video } = guide.data;
+const { Content } = await render(guide);
+---
+
+<BaseLayout title={title} description={`${character} 单角色攻略：${title}`}>
+  <article data-pagefind-body>
+    <header class="article-head">
+      <p class="eyebrow">单角色攻略</p>
+      <h1>{title}</h1>
+
+      <ul class="chips">
+        <!-- data-pagefind-filter：搜索页的"角色"下拉筛选依赖这里 -->
+        <li>
+          <a class="chip chip--accent" href={characterPath(character)} data-pagefind-filter="character">
+            {character}
+          </a>
+        </li>
+        {version && <li class="chip">版本 {version}</li>}
+        {tags.map((tag) => <li class="chip">{tag}</li>)}
+        {images.length > 0 && <li class="chip">图集 {images.length} 张</li>}
+        {video && <li class="chip">含视频</li>}
+      </ul>
+
+      <p class="meta-line">
+        <time datetime={date.toISOString()}>{formatDate(date)}</time>
+        {author && <span>作者：{author}</span>}
+        <a href={characterPath(character)}>查看 {character} 的全部攻略与配队 →</a>
+      </p>
+    </header>
+
+    {
+      cover && (
+        <figure class="cover">
+          <img src={assetUrl(cover)} alt={`${title} 封面`} loading="eager" decoding="async" referrerpolicy="no-referrer" />
+        </figure>
+      )
+    }
+
+    <div class="prose">
+      <Content />
+    </div>
+
+    <!-- 媒体区块不参与搜索索引：图片没有可索引文字，视频 iframe 更不该进索引 -->
+    {
+      video && (
+        <section class="media-block" data-pagefind-ignore>
+          <h2>视频讲解</h2>
+          <VideoEmbed url={video} title={`${title} 视频`} />
+        </section>
+      )
+    }
+
+    {
+      images.length > 0 && (
+        <section class="media-block" data-pagefind-ignore>
+          <h2>图集</h2>
+          <Gallery images={images} alt={title} />
+        </section>
+      )
+    }
+  </article>
+</BaseLayout>

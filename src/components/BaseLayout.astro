@@ -1,0 +1,45 @@
+---
+import '../styles/global.css';
+import SiteHeader from './SiteHeader.astro';
+import SiteFooter from './SiteFooter.astro';
+import FeedbackDialog from './FeedbackDialog.astro';
+import { SITE } from '../config';
+import { withBase } from '../lib/urls';
+
+interface Props {
+  /** 页面标题（会自动拼上站点名） */
+  title?: string;
+  description?: string;
+  /**
+   * true 时给 <body> 加 data-pagefind-ignore：
+   * 列表页 / 表单页 / 搜索页不进入 Pagefind 索引，避免和详情页重复。
+   */
+  noindex?: boolean;
+}
+
+const { title, description = SITE.description, noindex = false } = Astro.props;
+const pageTitle = title ? `${title} · ${SITE.title}` : `${SITE.title} · ${SITE.description}`;
+const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : Astro.url.pathname;
+---
+
+<!doctype html>
+<html lang={SITE.lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href={withBase('/favicon.svg')} type="image/svg+xml" />
+    <slot name="head" />
+  </head>
+  <body {...(noindex ? { 'data-pagefind-ignore': '' } : {})}>
+    <SiteHeader />
+    <main class="container">
+      <slot />
+    </main>
+    <SiteFooter />
+    <!-- 全站右下角的"反馈 Bug"悬浮按钮 + 模态框 -->
+    <FeedbackDialog />
+  </body>
+</html>

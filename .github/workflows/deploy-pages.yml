@@ -1,0 +1,73 @@
+name: deploy-pages
+
+# 用 GitHub Pages 托管（不需要 Cloudflare）。
+#
+# 适用场景：打不开 Cloudflare，或者不想再注册新账号。
+# 开启方式：仓库 Settings → Pages → Build and deployment → Source 选 "GitHub Actions"。
+#
+# 关于子路径：GitHub Pages 的项目站点地址是 https://<user>.github.io/<repo>/，
+# 所以构建时要带 BASE_PATH=/<repo>/。如果仓库名恰好是 <user>.github.io，
+# 地址是根路径，BASE_PATH 留空即可（下面的步骤会自动判断）。
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: 安装依赖
+        run: npm ci
+
+      - name: 表单与 staticman.yml 一致性检查
+        run: npm run check:forms
+
+      - name: 计算 BASE_PATH
+        id: base
+        run: |
+          OWNER="${GITHUB_REPOSITORY%%/*}"
+          NAME="${GITHUB_REPOSITORY#*/}"
+          if [ "$NAME" = "${OWNER}.github.io" ]; then
+            echo "value=/" >> "$GITHUB_OUTPUT"
+            echo "使用根路径（仓库名 = ${OWNER}.github.io）"
+          else
+            echo "value=/${NAME}/" >> "$GITHUB_OUTPUT"
+            echo "使用子路径 /${NAME}/"
+          fi
+
+      - name: 构建（含 Pagefind 索引）
+        run: npm run build
+        env:
+          BASE_PATH: ${{ steps.base.outputs.value }}
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,21 @@
+# Cloudflare Pages 会读取 dist/_headers（源文件在 public/_headers）
+# 语法：URL 模式 + 缩进的 Header: value，可叠加，后写的覆盖先写的。
+
+# 构建产物带内容哈希，可以长缓存
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Pagefind 的索引分片和片段同样按内容命名
+/pagefind/index/*
+  Cache-Control: public, max-age=31536000, immutable
+/pagefind/fragment/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# 入口清单每次构建都会变，必须回源校验，否则新内容搜不到
+/pagefind/*
+  Cache-Control: public, max-age=0, must-revalidate
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: SAMEORIGIN

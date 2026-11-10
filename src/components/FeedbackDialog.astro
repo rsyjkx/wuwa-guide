@@ -1,0 +1,97 @@
+---
+/**
+ * 内容纠错窗口（原生 <dialog> 模态框）。
+ *
+ * 面向的是"内容问题"而不是技术 Bug：数值写错、机制描述过时、配队不再适用、链接失效等。
+ * 不引入任何后端：内容只在浏览器里拼成 Markdown，点提交时带参数打开 GitHub 的
+ * "新建 Issue"页面（query 预填标题/正文/标签）。
+ * 没有配置仓库时，提交按钮隐藏，只保留"复制反馈内容"。
+ */
+import { FEEDBACK, staticmanReady } from '../config';
+
+const { labels } = FEEDBACK;
+const issueBase = staticmanReady
+  ? `https://github.com/${FEEDBACK.repoOwner}/${FEEDBACK.repoName}/issues/new`
+  : '';
+---
+
+<button
+  type="button"
+  class="feedback-trigger"
+  data-feedback-open
+  aria-haspopup="dialog"
+  data-pagefind-ignore
+>
+  内容纠错
+</button>
+
+<dialog
+  class="feedback"
+  data-feedback
+  data-issue-base={issueBase}
+  data-labels={labels.join(',')}
+  aria-labelledby="feedback-title"
+  data-pagefind-ignore
+>
+  <form class="feedback__form" data-feedback-form>
+    <div class="feedback__head">
+      <h2 id="feedback-title">内容纠错 / 反馈</h2>
+      <button type="button" class="feedback__close" data-feedback-close aria-label="关闭">×</button>
+    </div>
+
+    <p class="hint">
+      发现攻略或配队里的信息写错、版本过时、链接失效？在这里说一声。反馈不会存到本站（本站没有数据库），提交会跳转到 GitHub
+      Issues；不想登录也可以点"复制反馈内容"发给站长。
+    </p>
+
+    <label class="field">
+      <span>问题类型</span>
+      <select data-feedback-kind>
+        <option value="信息错误">信息错误（数值 / 机制 / 描述写错）</option>
+        <option value="版本过时">版本过时（时效性不足）</option>
+        <option value="配队过时">配队不再适用</option>
+        <option value="链接失效">链接 / 图片失效</option>
+        <option value="其他">其他建议</option>
+      </select>
+    </label>
+
+    <label class="field">
+      <span>相关页面</span>
+      <input type="text" data-feedback-page readonly />
+      <p class="hint">自动填当前页面地址，也可以改成具体某篇攻略 / 配队。</p>
+    </label>
+
+    <label class="field">
+      <span>哪里不对 <span class="req">*</span></span>
+      <textarea
+        rows="5"
+        maxlength="2000"
+        required
+        placeholder="例如：「共鸣链 2 链的描述是旧版，现在应该是……」「2.4 版本后这套配队的轴变了」"></textarea>
+      <p class="hint">如果是数值或机制写错，最好附上正确值 / 官方说明出处。</p>
+    </label>
+
+    <label class="field">
+      <span>截图链接</span>
+      <input type="text" maxlength="600" placeholder="可选，先传到图床再粘贴链接" data-feedback-image />
+    </label>
+
+    <label class="field">
+      <span>联系方式</span>
+      <input type="text" maxlength="80" placeholder="可选，邮箱 / QQ / 其他" data-feedback-contact />
+    </label>
+
+    <div class="form-actions">
+      <button class="btn" type="submit" data-feedback-submit>在 GitHub 提交</button>
+      <button class="btn btn--ghost" type="button" data-feedback-copy>复制反馈内容</button>
+    </div>
+
+    {!staticmanReady && <p class="notice notice--warn">仓库还没配置，暂时只能用"复制反馈内容"。</p>}
+
+    <p class="notice" data-feedback-status role="status" aria-live="polite" hidden></p>
+  </form>
+</dialog>
+
+<script>
+  import '../scripts/feedback';
+</script>

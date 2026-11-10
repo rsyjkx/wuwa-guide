@@ -1,0 +1,54 @@
+---
+import { characterPath, formatDate, isMainRole, teamPath, type Team } from '../lib/characters';
+import { assetUrl } from '../lib/urls';
+
+interface Props {
+  team: Team;
+  /** 已经按体系分组时，组标题里不必重复显示体系 */
+  showElement?: boolean;
+}
+
+const { team, showElement = true } = Astro.props;
+const { teamName, coreCharacter, members, element, tier, scenario, summary, date, cover } = team.data;
+const hasTopTier = tier ? /^t0(\.5)?$/i.test(tier.trim()) : false;
+---
+
+<article class="card">
+  {
+    cover && (
+      <a class="card__cover" href={teamPath(team)} tabindex="-1" aria-hidden="true">
+        <img src={assetUrl(cover)} alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" />
+      </a>
+    )
+  }
+  <h3 class="card__title"><a href={teamPath(team)}>{teamName}</a></h3>
+  <p class="card__meta">
+    {tier && <span class={`tier ${hasTopTier ? 'tier--top' : ''}`}>{tier}</span>}
+    {showElement && <span class="chip">{element}</span>}
+    <a class="chip chip--accent" href={characterPath(coreCharacter)}>核心 · {coreCharacter}</a>
+    {date && <time datetime={date.toISOString()}>{formatDate(date)}</time>}
+  </p>
+
+  <ul class="chips" aria-label="成员构成">
+    {
+      members.map((member) => (
+        <li class={`chip ${isMainRole(member.role) ? 'chip--main' : ''}`}>
+          <span>{member.role}</span>
+          <span>{member.name}</span>
+        </li>
+      ))
+    }
+  </ul>
+
+  {summary && <p class="muted" style="margin: 0.6rem 0 0; font-size: 0.88rem;">{summary}</p>}
+
+  {
+    scenario.length > 0 && (
+      <ul class="chips" aria-label="适用场景">
+        {scenario.map((item) => (
+          <li class="chip">{item}</li>
+        ))}
+      </ul>
+    )
+  }
+</article>

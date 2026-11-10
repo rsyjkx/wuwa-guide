@@ -1,0 +1,90 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../components/BaseLayout.astro';
+import MemberList from '../../components/MemberList.astro';
+import Gallery from '../../components/Gallery.astro';
+import VideoEmbed from '../../components/VideoEmbed.astro';
+import { characterPath, formatDate } from '../../lib/characters';
+import { assetUrl } from '../../lib/urls';
+
+export async function getStaticPaths() {
+  const teams = await getCollection('teams');
+  return teams.map((team) => ({ params: { slug: team.id }, props: { team } }));
+}
+
+const { team } = Astro.props;
+const { teamName, coreCharacter, members, element, tier, scenario, summary, author, date, cover, images, video } = team.data;
+const { Content } = await render(team);
+const hasTopTier = tier ? /^t0(\.5)?$/i.test(tier.trim()) : false;
+---
+
+<BaseLayout title={teamName} description={`${element}体系配队：${teamName}，核心角色 ${coreCharacter}。`}>
+  <article data-pagefind-body>
+    <header class="article-head">
+      <p class="eyebrow">配队推荐</p>
+      <h1>{teamName}</h1>
+
+      <ul class="chips">
+        {tier && <li class={`tier ${hasTopTier ? 'tier--top' : ''}`}>{tier}</li>}
+        <!-- data-pagefind-filter="team-element"：搜索页的"配队体系"下拉依赖这里 -->
+        <li class="chip" data-pagefind-filter="team-element">{element}</li>
+        <li class="chip chip--accent">
+          <span>核心</span>
+          <!-- 过滤器值取自元素文本，所以 data-pagefind-filter 只包住角色名，避免把"核心 · "也写进索引 -->
+          <a href={characterPath(coreCharacter)} data-pagefind-filter="character">{coreCharacter}</a>
+        </li>
+        {scenario.map((item) => <li class="chip">{item}</li>)}
+        {images.length > 0 && <li class="chip">图集 {images.length} 张</li>}
+        {video && <li class="chip">含视频</li>}
+      </ul>
+
+      {summary && <p class="lede" style="margin-top: 0.8rem;">{summary}</p>}
+
+      <p class="meta-line">
+        {date && <time datetime={date.toISOString()}>{formatDate(date)}</time>}
+        {author && <span>作者：{author}</span>}
+        <a href={characterPath(coreCharacter)}>查看 {coreCharacter} 的角色页 →</a>
+      </p>
+    </header>
+
+    <!--
+      成员构成用 data-pagefind-ignore 排除在搜索索引之外：
+      成员名重复度高，进入索引会污染搜索结果与摘要。
+      筛选信息已经由上面的"核心角色"和"体系"标签提供。
+    -->
+    {
+      cover && (
+        <figure class="cover">
+          <img src={assetUrl(cover)} alt={`${teamName} 封面`} loading="eager" decoding="async" referrerpolicy="no-referrer" />
+        </figure>
+      )
+    }
+
+    <section class="member-block" data-pagefind-ignore aria-labelledby="members-title">
+      <h2 id="members-title">成员构成</h2>
+      <MemberList members={members} />
+    </section>
+
+    <div class="prose">
+      <Content />
+    </div>
+
+    {
+      video && (
+        <section class="media-block" data-pagefind-ignore>
+          <h2>演示视频</h2>
+          <VideoEmbed url={video} title={`${teamName} 演示视频`} />
+        </section>
+      )
+    }
+
+    {
+      images.length > 0 && (
+        <section class="media-block" data-pagefind-ignore>
+          <h2>图集</h2>
+          <Gallery images={images} alt={teamName} />
+        </section>
+      )
+    }
+  </article>
+</BaseLayout>

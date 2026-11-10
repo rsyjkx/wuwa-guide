@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675" role="img" aria-label="示例配队封面">
+  <defs>
+    <linearGradient id="bg2" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#3a2410" />
+      <stop offset="1" stop-color="#0e1116" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="675" fill="url(#bg2)" />
+  <circle cx="900" cy="540" r="260" fill="#ffcf5c" opacity="0.1" />
+  <text x="80" y="300" fill="#e7eaf0" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="70" font-weight="700">
+    配队封面示例
+  </text>
+  <text x="80" y="380" fill="#9aa5b5" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="32">
+    卡片和详情页顶部都会显示这张图（16:9 效果最好）
+  </text>
+  <text x="80" y="450" fill="#ffcf5c" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="28">
+    cover: /media/example-team-cover.svg
+  </text>
+</svg>

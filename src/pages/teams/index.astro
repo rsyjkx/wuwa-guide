@@ -1,0 +1,40 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../components/BaseLayout.astro';
+import TeamCard from '../../components/TeamCard.astro';
+import { groupTeamsByElement } from '../../lib/characters';
+import { withBase } from '../../lib/urls';
+
+const teams = await getCollection('teams');
+const groups = groupTeamsByElement(teams);
+---
+
+<BaseLayout title="配队推荐" description="《鸣潮》配队推荐列表，按体系分组，展示核心角色与成员定位。" noindex>
+  <section class="page-head">
+    <p class="eyebrow">配队</p>
+    <h1>配队推荐</h1>
+    <p class="lede">
+      共 {teams.length} 支队伍，按体系分组。tier 仅作强度标注，列表不按它排序。
+    </p>
+  </section>
+
+  {
+    groups.length === 0 ? (
+      <p class="empty">还没有配队，欢迎到<a href={withBase('/submit/')}>投稿页</a>提交第一支。</p>
+    ) : (
+      groups.map((group) => (
+        <section class="section" aria-labelledby={`group-${group.element}`}>
+          <div class="section__head">
+            <h2 id={`group-${group.element}`}>{group.element}</h2>
+            <span class="muted">{group.teams.length} 支</span>
+          </div>
+          <div class="grid">
+            {group.teams.map((team) => (
+              <TeamCard team={team} showElement={false} />
+            ))}
+          </div>
+        </section>
+      ))
+    )
+  }
+</BaseLayout>

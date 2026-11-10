@@ -1,0 +1,70 @@
+name: review-gate
+
+# 发布闸门：内容 PR 必须由仓库所有者（站长）批准后才能合并。
+#
+# 谁是"站长"？= 这个 GitHub 仓库的 owner（context.repo.owner），
+# 所以不需要维护额外的人员名单，改仓库归属就自动跟着变。
+#
+# 这个工作流不负责"挡住合并"（那是分支保护的工作），它负责把状态显示出来：
+# PR 列表里能直接看到 ✗ 未批准 / ✓ 已批准。即使分支保护被误改，这里也会红。
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  pull_request_review:
+    types: [submitted, dismissed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  review-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检查是否已有站长批准
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+
+            if (!pr) {
+              core.info('没有 PR 上下文，跳过审批检查。');
+              return;
+            }
+
+            if (pr.draft) {
+              core.info('草稿 PR，跳过审批检查。');
+              return;
+            }
+
+            const owner = context.repo.owner.toLowerCase();
+
+            const reviews = await github.paginate(github.rest.pulls.listReviews, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr.number,
+              per_page: 100,
+            });
+
+            // 只保留每个人最新一次的状态：批准后又被要求修改，就不算批准了
+            const latest = new Map();
+            for (const review of reviews) {
+              const login = (review.user?.login ?? '').toLowerCase();
+              if (!login) continue;
+              latest.set(login, review.state);
+            }
+
+            const state = latest.get(owner) ?? '（无评审）';
+            core.info(`仓库所有者：${owner}`);
+            core.info(`站长最新评审状态：${state}`);
+
+            if (state !== 'APPROVED') {
+              core.setFailed(
+                '还没有站长批准。请用站长账号在 Files changed → Review changes → Approve，然后再合并。',
+              );
+              return;
+            }
+
+            core.info('站长已批准，可以合并（前提是其他检查也通过）。');

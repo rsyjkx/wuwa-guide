@@ -1,0 +1,397 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../components/BaseLayout.astro';
+import {
+  ELEMENT_SUGGESTIONS,
+  ROLE_SUGGESTIONS,
+  SCENARIO_OPTIONS,
+  TIER_SUGGESTIONS,
+  newFileUrl,
+  staticmanAction,
+  staticmanReady,
+} from '../config';
+import { allCharacters } from '../lib/characters';
+
+const [guides, teams] = await Promise.all([getCollection('guides'), getCollection('teams')]);
+const characters = allCharacters(guides, teams).map((character) => character.name);
+
+const actionGuides = staticmanAction('guides');
+const actionTeams = staticmanAction('teams');
+
+// 配队表单默认给 3 行成员，前端可以增删（最多 8 行，对应 schema 的 max(8)）
+const initialRows = [0, 1, 2];
+---
+
+<BaseLayout title="投稿" description="提交《鸣潮》单角色攻略或配队推荐，经站长审核后发布。" noindex>
+  <section class="page-head">
+    <p class="eyebrow">投稿</p>
+    <h1>投稿攻略 / 配队</h1>
+    <p class="lede" style="max-width: 62ch;">
+      提交会通过 Staticman 在你的 GitHub 仓库里创建 Pull Request，站长审核合并后，Cloudflare Pages
+      会自动重新构建并发布。不需要注册账号，本站也不会保存你的任何登录信息。
+    </p>
+  </section>
+
+  {
+    !staticmanReady && (
+      <p class="notice notice--warn">
+        提示：<code>src/config.ts</code> 里的 <code>STATICMAN.username</code> /{' '}
+        <code>STATICMAN.repository</code> 还是占位符，当前提交不会成功。部署时请改成你的 GitHub
+        用户名和仓库名，详见 README。
+      </p>
+    )
+  }
+
+  <p class="notice">
+    表单提交走 Staticman（会自动开 PR）。如果 Staticman 暂时不可用，也可以直接在 GitHub 上新建文件：<a
+      href={newFileUrl('guides')}
+      target="_blank"
+      rel="noopener">新建攻略文件</a
+    >
+    ·
+    <a href={newFileUrl('teams')} target="_blank" rel="noopener">新建配队文件</a>（字段规范见 README）。
+  </p>
+
+  <div data-tabs>
+    <div class="tabs__nav" role="tablist" aria-label="投稿类型" data-tabs-nav hidden>
+      <button type="button" role="tab" id="tab-guides" aria-controls="panel-guides" aria-selected="true" data-tab="guides">
+        单角色攻略
+      </button>
+      <button type="button" role="tab" id="tab-teams" aria-controls="panel-teams" aria-selected="false" data-tab="teams">
+        配队推荐
+      </button>
+    </div>
+
+    <!-- ============ 单角色攻略 ============ -->
+    <section id="panel-guides" role="tabpanel" aria-labelledby="tab-guides" data-panel="guides">
+      <h2>单角色攻略</h2>
+      <p class="review-note">
+        <strong>审核方式</strong>：提交会开 Pull Request，需<strong>站长批准</strong>后才会合并发布。
+      </p>
+      <form class="form" action={actionGuides} method="post" data-staticman data-kind="guides">
+        <label class="field">
+          <span>攻略标题 <span class="req">*</span></span>
+          <input type="text" name="fields[title]" required minlength="4" maxlength="60" placeholder="例如：今汐 2.4 版本输出手法与声骸选择" />
+        </label>
+
+        <div class="field-row">
+          <label class="field">
+            <span>角色名 <span class="req">*</span></span>
+            <input
+              type="text"
+              name="fields[character]"
+              required
+              maxlength="20"
+              list="character-options"
+              placeholder="例如：今汐"
+            />
+          </label>
+
+          <label class="field">
+            <span>作者昵称</span>
+            <input type="text" name="fields[author]" maxlength="30" placeholder="可选，会显示在攻略页" />
+          </label>
+        </div>
+
+        <div class="field-row">
+          <label class="field">
+            <span>适用版本</span>
+            <input type="text" name="fields[version]" maxlength="20" placeholder="可选，例如 2.4" />
+          </label>
+
+          <label class="field">
+            <span>标签</span>
+            <input type="text" name="fields[tags]" maxlength="100" placeholder="可选，用逗号分隔，例如：输出手法, 声骸" />
+          </label>
+        </div>
+
+        <fieldset class="field media-fields">
+          <legend>图片与视频（可选）</legend>
+          <p class="hint">
+            Staticman 只能写文本字段，所以这里收的是<strong>链接</strong>：先把图片传到图床 / GitHub，视频传到 B 站，再粘贴地址。
+            放在仓库 <code>public/media/</code> 里的图片可以直接填 <code>/media/xxx.png</code>。
+          </p>
+
+          <label class="field">
+            <span>封面图链接</span>
+            <input
+              type="text"
+              inputmode="url"
+              name="fields[cover]"
+              maxlength="600"
+              placeholder="https://… 或 /media/cover.png"
+              data-media-cover
+            />
+            <div class="media-preview" data-media-preview="cover"></div>
+          </label>
+
+          <label class="field">
+            <span>图集链接（一行一个，最多 12 张）</span>
+            <textarea
+              class="textarea--short"
+              name="fields[images]"
+              rows="3"
+              maxlength="4000"
+              placeholder={'https://…\n/media/shot-1.png'}></textarea>
+            <div class="media-preview" data-media-preview="images"></div>
+          </label>
+
+          <label class="field">
+            <span>视频链接</span>
+            <input
+              type="text"
+              inputmode="url"
+              name="fields[video]"
+              maxlength="600"
+              placeholder="https://www.bilibili.com/video/BV… 或 https://youtu.be/…"
+            />
+            <p class="hint">支持 B 站 / YouTube（自动嵌入播放器），或 .mp4 直链。</p>
+          </label>
+        </fieldset>
+
+        <label class="field">
+          <span>正文（Markdown）<span class="req">*</span></span>
+          <textarea
+            name="fields[content]"
+            required
+            minlength="30"
+            maxlength="20000"
+            placeholder={'## 技能循环\n\n- 起手：…\n- 循环：…\n\n## 声骸搭配\n\n…'}></textarea>
+          <p class="hint">支持 Markdown 语法，建议 300 字以上并分好小标题。</p>
+        </label>
+
+        <!-- 蜜罐：正常用户看不见也不会填；机器人填了就带进请求，
+             而 _honeypot 不在 staticman.yml 的 allowedFields 里，会被 Staticman 直接拒绝。 -->
+        <div class="honeypot" aria-hidden="true">
+          <label>请勿填写<input type="text" name="fields[_honeypot]" tabindex="-1" autocomplete="off" data-honeypot /></label>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn" type="submit">提交审核</button>
+          <p class="hint" style="margin: 0;">提交后请在 GitHub 上等待站长合并 PR。</p>
+        </div>
+
+        <p class="notice" data-status role="status" aria-live="polite" hidden></p>
+      </form>
+    </section>
+
+    <!-- ============ 配队推荐 ============ -->
+    <section id="panel-teams" role="tabpanel" aria-labelledby="tab-teams" data-panel="teams">
+      <h2>配队推荐</h2>
+      <p class="review-note">
+        <strong>审核方式</strong>：提交会开 Pull Request，需<strong>站长批准</strong>后才会合并发布。
+      </p>
+      <form class="form" action={actionTeams} method="post" data-staticman data-kind="teams">
+        <div class="field-row">
+          <label class="field">
+            <span>配队名称 <span class="req">*</span></span>
+            <input type="text" name="fields[teamName]" required minlength="2" maxlength="40" placeholder="例如：今汐聚爆速切队" />
+          </label>
+
+          <label class="field">
+            <span>核心角色 <span class="req">*</span></span>
+            <input
+              type="text"
+              name="fields[coreCharacter]"
+              required
+              maxlength="20"
+              list="character-options"
+              placeholder="例如：今汐"
+            />
+            <p class="hint">角色页的"相关配队"按这个字段匹配。</p>
+          </label>
+        </div>
+
+        <div class="field-row">
+          <label class="field">
+            <span>体系 / 属性 <span class="req">*</span></span>
+            <input type="text" name="fields[element]" required maxlength="20" list="element-options" placeholder="例如：聚爆" />
+          </label>
+
+          <label class="field">
+            <span>强度分级</span>
+            <input type="text" name="fields[tier]" maxlength="10" list="tier-options" placeholder="可选，例如 T0.5" />
+            <p class="hint">仅作展示，不参与排序。</p>
+          </label>
+        </div>
+
+        <div class="field">
+          <span>成员 <span class="req">*</span></span>
+          <div class="member-rows" data-member-rows>
+            {
+              initialRows.map((index) => (
+                <div class="member-row" data-member-row>
+                  <label class="field">
+                    <span>角色名</span>
+                    <input
+                      type="text"
+                      name={`fields[members][${index}][name]`}
+                      maxlength="20"
+                      list="character-options"
+                      placeholder="角色名"
+                      data-member-name
+                    />
+                  </label>
+                  <label class="field">
+                    <span>定位</span>
+                    <input
+                      type="text"
+                      name={`fields[members][${index}][role]`}
+                      maxlength="20"
+                      list="role-options"
+                      placeholder="主C / 副C / 辅助 / 治疗"
+                      data-member-role
+                    />
+                  </label>
+                  <button type="button" class="btn btn--ghost" data-remove-row aria-label="删除这个成员">
+                    删除
+                  </button>
+                </div>
+              ))
+            }
+          </div>
+          <div class="form-actions" style="margin-top: 0.5rem;">
+            <button type="button" class="btn btn--ghost" data-add-row>+ 添加成员</button>
+            <p class="hint" style="margin: 0;">最多 8 名，空行会在提交时自动移除。</p>
+          </div>
+        </div>
+
+        <div class="field">
+          <span>适用场景</span>
+          <div class="checkbox-group">
+            {
+              SCENARIO_OPTIONS.map((scenario) => (
+                <label>
+                  <input type="checkbox" name="fields[scenario][]" value={scenario} />
+                  {scenario}
+                </label>
+              ))
+            }
+          </div>
+        </div>
+
+        <label class="field">
+          <span>一句话说明</span>
+          <input type="text" name="fields[summary]" maxlength="120" placeholder="可选，会显示在配队卡片上" />
+        </label>
+
+        <fieldset class="field media-fields">
+          <legend>图片与视频（可选）</legend>
+          <p class="hint">
+            这里收的是<strong>链接</strong>：图片传到图床 / GitHub，视频传到 B 站，再粘贴地址。仓库里的图片可直接填
+            <code>/media/xxx.png</code>。
+          </p>
+
+          <label class="field">
+            <span>封面图链接</span>
+            <input
+              type="text"
+              inputmode="url"
+              name="fields[cover]"
+              maxlength="600"
+              placeholder="https://… 或 /media/cover.png"
+              data-media-cover
+            />
+            <div class="media-preview" data-media-preview="cover"></div>
+          </label>
+
+          <label class="field">
+            <span>图集链接（一行一个，最多 12 张）</span>
+            <textarea
+              class="textarea--short"
+              name="fields[images]"
+              rows="3"
+              maxlength="4000"
+              placeholder={'https://…\n/media/shot-1.png'}></textarea>
+            <div class="media-preview" data-media-preview="images"></div>
+          </label>
+
+          <label class="field">
+            <span>视频链接</span>
+            <input
+              type="text"
+              inputmode="url"
+              name="fields[video]"
+              maxlength="600"
+              placeholder="https://www.bilibili.com/video/BV… 或 https://youtu.be/…"
+            />
+            <p class="hint">支持 B 站 / YouTube（自动嵌入播放器），或 .mp4 直链。</p>
+          </label>
+        </fieldset>
+
+        <label class="field">
+          <span>正文（Markdown）<span class="req">*</span></span>
+          <textarea
+            name="fields[content]"
+            required
+            minlength="30"
+            maxlength="20000"
+            placeholder={'## 配队思路\n\n…\n\n## 输出轴\n\n1. …\n\n## 注意事项\n\n…'}></textarea>
+        </label>
+
+        <label class="field">
+          <span>作者昵称</span>
+          <input type="text" name="fields[author]" maxlength="30" placeholder="可选" />
+        </label>
+
+        <div class="honeypot" aria-hidden="true">
+          <label>请勿填写<input type="text" name="fields[_honeypot]" tabindex="-1" autocomplete="off" data-honeypot /></label>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn" type="submit">提交审核</button>
+          <p class="hint" style="margin: 0;">提交后请在 GitHub 上等待站长合并 PR。</p>
+        </div>
+
+        <p class="notice" data-status role="status" aria-live="polite" hidden></p>
+      </form>
+    </section>
+  </div>
+
+  <!-- 输入建议：datalist 提供下拉候选，同时允许填写新的角色 / 体系 / 定位 -->
+  <datalist id="character-options">
+    {characters.map((name) => <option value={name} />)}
+  </datalist>
+  <datalist id="element-options">
+    {ELEMENT_SUGGESTIONS.map((element) => <option value={element} />)}
+  </datalist>
+  <datalist id="role-options">
+    {ROLE_SUGGESTIONS.map((role) => <option value={role} />)}
+  </datalist>
+  <datalist id="tier-options">
+    {TIER_SUGGESTIONS.map((tier) => <option value={tier} />)}
+  </datalist>
+
+  <template data-member-template>
+    <div class="member-row" data-member-row>
+      <label class="field">
+        <span>角色名</span>
+        <input type="text" name="fields[members][0][name]" maxlength="20" list="character-options" placeholder="角色名" data-member-name />
+      </label>
+      <label class="field">
+        <span>定位</span>
+        <input
+          type="text"
+          name="fields[members][0][role]"
+          maxlength="20"
+          list="role-options"
+          placeholder="主C / 副C / 辅助 / 治疗"
+          data-member-role
+        />
+      </label>
+      <button type="button" class="btn btn--ghost" data-remove-row aria-label="删除这个成员">删除</button>
+    </div>
+  </template>
+
+  <noscript>
+    <p class="notice notice--warn">
+      当前浏览器禁用了 JavaScript，表单仍可直接提交，但站点无法显示提交结果，你会看到一个 JSON
+      响应页面。另外成员行不能增删，只能填写默认的 3 行。
+    </p>
+  </noscript>
+
+  <script>
+    // 客户端增强逻辑在 src/scripts/submit-form.ts，会由 Astro 打包
+    import '../scripts/submit-form';
+  </script>
+</BaseLayout>

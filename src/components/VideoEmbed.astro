@@ -1,0 +1,44 @@
+---
+/**
+ * 视频：B 站 / YouTube 用官方 iframe 嵌入，.mp4 直链用原生 <video>，
+ * 其它链接降级成外链。见 src/lib/media.ts 的解析规则。
+ */
+import { parseVideo, videoLabel } from '../lib/media';
+import { assetUrl } from '../lib/urls';
+
+interface Props {
+  url?: string;
+  title?: string;
+}
+
+const { url, title = '相关视频' } = Astro.props;
+const embed = parseVideo(url);
+---
+
+{
+  embed && (
+    <figure class="video">
+      {embed.kind === 'file' ? (
+        <video class="video__file" controls preload="metadata" src={assetUrl(embed.src)} playsinline />
+      ) : embed.kind === 'link' ? (
+        <p>
+          <a class="btn btn--ghost" href={assetUrl(embed.src)} target="_blank" rel="noopener noreferrer">
+            在来源站点观看视频
+          </a>
+        </p>
+      ) : (
+        <div class="video__frame">
+          <iframe
+            src={embed.src}
+            title={title}
+            loading="lazy"
+            allowfullscreen
+            referrerpolicy="no-referrer"
+            allow="autoplay; fullscreen; picture-in-picture"
+          />
+        </div>
+      )}
+      <figcaption class="muted">来源：{videoLabel(embed)}</figcaption>
+    </figure>
+  )
+}

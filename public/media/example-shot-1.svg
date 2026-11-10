@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" width="960" height="600" role="img" aria-label="示例图集图片一">
+  <rect width="960" height="600" fill="#12171f" />
+  <rect x="40" y="40" width="880" height="520" rx="24" fill="none" stroke="#2a3444" stroke-width="4" stroke-dasharray="18 14" />
+  <text x="480" y="290" text-anchor="middle" fill="#e7eaf0" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="60" font-weight="700">
+    图集示例 1
+  </text>
+  <text x="480" y="360" text-anchor="middle" fill="#9aa5b5" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="28">
+    放面板 / 词条 / 伤害数字截图
+  </text>
+</svg>

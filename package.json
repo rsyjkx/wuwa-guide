@@ -1,0 +1,29 @@
+{
+  "name": "wuwa-guide",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "《鸣潮》单角色攻略与配队推荐静态站（Astro + Staticman + Pagefind + Cloudflare Pages）",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "node scripts/build.mjs",
+    "preview": "astro preview",
+    "check": "astro check",
+    "check:forms": "node scripts/check-forms.mjs",
+    "setup": "node scripts/setup.mjs",
+    "simulate": "node scripts/simulate-submission.mjs",
+    "protect": "node scripts/apply-branch-protection.mjs"
+  },
+  "dependencies": {
+    "astro": "6.4.8"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@types/node": "^26.6.6",
+    "pagefind": "1.6.0",
+    "typescript": "^5.9.3"
+  }
+}

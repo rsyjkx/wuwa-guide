@@ -1,0 +1,71 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../components/BaseLayout.astro';
+import GuideCard from '../../components/GuideCard.astro';
+import TeamCard from '../../components/TeamCard.astro';
+import { allCharacters, guidesOfCharacter, teamsOfCharacter } from '../../lib/characters';
+import { withBase } from '../../lib/urls';
+
+export async function getStaticPaths() {
+  const [guides, teams] = await Promise.all([getCollection('guides'), getCollection('teams')]);
+
+  return allCharacters(guides, teams).map((character) => ({
+    params: { character: character.name },
+    props: { name: character.name },
+  }));
+}
+
+const { name } = Astro.props;
+const [guides, teams] = await Promise.all([getCollection('guides'), getCollection('teams')]);
+const characterGuides = guidesOfCharacter(guides, name);
+const relatedTeams = teamsOfCharacter(teams, name);
+---
+
+<BaseLayout title={`${name} 攻略与配队`} description={`${name} 的单角色攻略与相关配队推荐。`} noindex>
+  <section class="page-head">
+    <p class="eyebrow">角色</p>
+    <h1>{name}</h1>
+    <p class="lede">
+      攻略 {characterGuides.length} 篇 · 以该角色为核心的配队 {relatedTeams.length} 支
+    </p>
+    <div class="form-actions" style="margin-top: 1rem;">
+      <a class="btn btn--ghost" href={withBase('/characters/')}>全部角色</a>
+      <a class="btn btn--ghost" href={withBase('/submit/')}>投稿 {name} 攻略</a>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="guides-title">
+    <div class="section__head">
+      <h2 id="guides-title">单角色攻略</h2>
+    </div>
+    {
+      characterGuides.length === 0 ? (
+        <p class="empty">暂时没有 {name} 的单角色攻略，欢迎投稿。</p>
+      ) : (
+        <div class="grid">
+          {characterGuides.map((guide) => (
+            <GuideCard guide={guide} showCharacter={false} />
+          ))}
+        </div>
+      )
+    }
+  </section>
+
+  <section class="section" aria-labelledby="teams-title">
+    <div class="section__head">
+      <h2 id="teams-title">相关配队</h2>
+      <span class="muted">按 coreCharacter 匹配</span>
+    </div>
+    {
+      relatedTeams.length === 0 ? (
+        <p class="empty">还没有以 {name} 为核心的配队。</p>
+      ) : (
+        <div class="grid">
+          {relatedTeams.map((team) => (
+            <TeamCard team={team} />
+          ))}
+        </div>
+      )
+    }
+  </section>
+</BaseLayout>

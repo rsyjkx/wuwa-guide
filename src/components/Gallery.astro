@@ -1,0 +1,46 @@
+---
+/**
+ * 图集：缩略图网格 + 原生 <dialog> 灯箱（不引入任何 JS 库）。
+ * 每个实例自带自己的 dialog，同页面出现多个图集也互不干扰。
+ */
+import { assetUrl } from '../lib/urls';
+
+interface Props {
+  images: string[];
+  /** 用于生成 alt 文案，例如角色名或攻略标题 */
+  alt?: string;
+}
+
+const { images, alt = '' } = Astro.props;
+---
+
+<div class="gallery" data-gallery>
+  {
+    images.map((src, index) => (
+      <button
+        type="button"
+        class="gallery__item"
+        data-lightbox-src={assetUrl(src)}
+        aria-label={`查看第 ${index + 1} 张大图`}
+      >
+        <img
+          src={assetUrl(src)}
+          alt={alt ? `${alt} 图片 ${index + 1}` : `图片 ${index + 1}`}
+          loading="lazy"
+          decoding="async"
+          referrerpolicy="no-referrer"
+        />
+      </button>
+    ))
+  }
+
+  <dialog class="lightbox" aria-label="图片预览">
+    <img data-lightbox-image alt="" referrerpolicy="no-referrer" />
+    <button type="button" class="lightbox__close" data-lightbox-close aria-label="关闭预览">×</button>
+  </dialog>
+</div>
+
+<script>
+  // 只在图集真的出现时才加载灯箱逻辑
+  import '../scripts/lightbox';
+</script>
