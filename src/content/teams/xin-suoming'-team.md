@@ -2,19 +2,19 @@
 title: 心同奏配队一图流
 teamName: "心同奏配队（一图流）"
 coreCharacter: 今汐
-members:
-  - name: 心
-    role: 主C
-  - name: 今汐
-    role: 副C
-  - name: 守岸人
-    role: 治疗 / 辅助
 element: 衍射
 tier: T0
 scenario: [深渊, 速切]
 summary: 按参考图录入的配队面板示例。
 author: 站内示例
 date: 2026-11-10
+members:
+  - name: "心"
+    role: "主C"
+  - name: "锁瞑"
+    role: "副C"
+  - name: "守岸人"
+    role: "治疗 / 辅助"
 buildMembers:
   - slot: "一号位"
     character: "心"
