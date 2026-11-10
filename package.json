@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "《鸣潮》单角色攻略与配队推荐静态站（Astro + Staticman + Pagefind + Cloudflare Pages）",
+  "description": "《鸣潮》单角色攻略与配队推荐静态站（Astro + Pagefind + GitHub Pages）",
   "engines": {
     "node": ">=22.12.0"
   },
@@ -12,9 +12,7 @@
     "build": "node scripts/build.mjs",
     "preview": "astro preview",
     "check": "astro check",
-    "check:forms": "node scripts/check-forms.mjs",
     "setup": "node scripts/setup.mjs",
-    "simulate": "node scripts/simulate-submission.mjs",
     "protect": "node scripts/apply-branch-protection.mjs"
   },
   "dependencies": {
