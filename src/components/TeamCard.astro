@@ -45,21 +45,11 @@ const hasTopTier = tier ? /^t0(\.5)?$/i.test(tier.trim()) : false;
     }
   </ul>
 
-  {tags.length > 0 && (
+  {[...new Set([...tags, ...(damageTypes ?? [])])].length > 0 && (
     <ul class="chips" data-tag-chips aria-label="标签">
-      {tags.map((tag) => (
+      {[...new Set([...tags, ...(damageTypes ?? [])])].map((chip) => (
         <li class="chip chip--tag">
-          <button type="button" data-tag={tag} title="按这个标签筛选">{tag}</button>
-        </li>
-      ))}
-    </ul>
-  )}
-
-  {damageTypes.length > 0 && (
-    <ul class="chips" data-damage-chips aria-label="伤害类型">
-      {damageTypes.map((type) => (
-        <li class="chip chip--damage">
-          <button type="button" data-damage-tag={type} title="按伤害类型筛选">{type}</button>
+          <button type="button" data-tag={chip} title="按这个标签筛选">{chip}</button>
         </li>
       ))}
     </ul>
