@@ -1,112 +1,59 @@
 ---
 /**
- * 站长管理页：把仓库里的内容列出来，每条给「编辑 / 删除 / 源文件」入口。
+ * 站长的临时管理页（不在任何导航里，也不进搜索索引）。
  *
- * 这个页面本身是公开的（纯静态），但所有操作都跳转到 GitHub，
- * 最终由 GitHub 的权限校验决定谁能改 —— 没有登录、没有 token、没有后端。
+ * ⚠️ 这不是真正的权限系统：站点是纯静态的，任何人都能打开这个地址。
+ * 真正的门是 GitHub 权限 —— 下面的"编辑 / 删除"只是跳转到 GitHub 的对应页面，
+ * 没有仓库写权限的人点了也改不了任何东西。
  */
 import { getCollection } from 'astro:content';
 import BaseLayout from '../components/BaseLayout.astro';
-import { newFileUrl, repoFileUrl, staticmanReady, STATICMAN } from '../config';
-import { allCharacters, formatDate, guidesOfCharacter, sortGuides, sortTeams, teamsOfCharacter } from '../lib/characters';
+import { newFileUrl, repoFileUrl } from '../config';
+import { allCharacters, formatDate, sortTeams, teamsOfCharacter } from '../lib/characters';
 import { withBase } from '../lib/urls';
 
-const [guides, teams] = await Promise.all([getCollection('guides'), getCollection('teams')]);
-const guideList = sortGuides(guides);
+const teams = await getCollection('teams');
 const teamList = sortTeams(teams);
-const repoUrl = `https://github.com/${STATICMAN.username}/${STATICMAN.repository}`;
-const characters = allCharacters(guides, teams);
+const characters = allCharacters(teams);
 ---
 
-<BaseLayout title="管理" description="站长管理入口。" noindex>
-  <meta slot="head" name="robots" content="noindex, nofollow, noarchive" />
+<BaseLayout title="管理（私有）" description="站点内容管理入口。" noindex>
   <section class="page-head">
-    <p class="eyebrow">站长工具（私有入口，请勿分享）</p>
+    <p class="eyebrow">私有页面 · 不对外</p>
     <h1>内容管理</h1>
     <p class="lede" style="max-width: 62ch;">
-      删除 / 编辑都是跳到 GitHub 的对应页面完成的，只有仓库所有者或协作者点了才生效。删除提交后会自动重新构建发布。
+      下面每个「编辑 / 删除」都会跳到 GitHub 对应页面，<strong>只有仓库所有者点了才有效</strong>。
+      日常增删改建议用桌面上的「本地管理台」。
     </p>
     <div class="form-actions" style="margin-top: 1rem;">
-      <a class="btn" href={newFileUrl('guides')} target="_blank" rel="noopener">新建攻略</a>
       <a class="btn" href={newFileUrl('teams')} target="_blank" rel="noopener">新建配队</a>
-      <a class="btn btn--ghost" href={repoUrl} target="_blank" rel="noopener">打开仓库</a>
-    </div>
-    {
-      !staticmanReady && (
-        <p class="notice notice--warn">
-          <code>src/config.ts</code> 里还是占位符，下面的 GitHub 链接会指向不存在的仓库。
-        </p>
-      )
-    }
-  </section>
-
-  <section class="section" aria-labelledby="manage-characters">
-    <div class="section__head">
-      <h2 id="manage-characters">按角色（{characters.length}）</h2>
-      <span class="muted">角色的攻略与配队，直接在这里删</span>
-    </div>
-    <div class="character-manage">
-      {characters.map((character) => {
-        const charGuides = guidesOfCharacter(guides, character.name);
-        const charTeams = teamsOfCharacter(teams, character.name);
-        return (
-          <div class="character-block">
-            <h3>
-              <a href={withBase(`/characters/${encodeURIComponent(character.name)}/`)}>{character.name}</a>
-            </h3>
-            {charGuides.length === 0 && charTeams.length === 0 && <p class="muted">暂无内容</p>}
-            <ul>
-              {charGuides.map((guide) => (
-                <li>
-                  <span class="tag">攻略</span>
-                  <a href={withBase(`/guides/${guide.id}/`)}>{guide.data.title}</a>
-                  <a href={repoFileUrl('guides', guide.id, 'edit')} target="_blank" rel="noopener">编辑</a>
-                  <a class="danger" href={repoFileUrl('guides', guide.id, 'delete')} target="_blank" rel="noopener">删除</a>
-                </li>
-              ))}
-              {charTeams.map((team) => (
-                <li>
-                  <span class="tag">配队</span>
-                  <a href={withBase(`/teams/${team.id}/`)}>{team.data.teamName}</a>
-                  <a href={repoFileUrl('teams', team.id, 'edit')} target="_blank" rel="noopener">编辑</a>
-                  <a class="danger" href={repoFileUrl('teams', team.id, 'delete')} target="_blank" rel="noopener">删除</a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        );
-      })}
+      <a class="btn btn--ghost" href={withBase('/teams/')}>查看配队页</a>
     </div>
   </section>
 
-  <section class="section" aria-labelledby="manage-guides">
+  <section class="section" aria-labelledby="by-character">
     <div class="section__head">
-      <h2 id="manage-guides">单角色攻略（{guideList.length}）</h2>
-      <a href={withBase('/guides/')}>查看页面 →</a>
+      <h2 id="by-character">按角色</h2>
+      <span class="muted">每个角色名下的配队</span>
     </div>
     {
-      guideList.length === 0 ? (
-        <p class="empty">还没有攻略。</p>
+      characters.length === 0 ? (
+        <p class="empty">还没有内容。</p>
       ) : (
-        <div class="manage-table" role="table" aria-label="攻略列表">
-          <div class="manage-row manage-row--head" role="row">
-            <span role="columnheader">标题</span>
-            <span role="columnheader">角色</span>
-            <span role="columnheader">日期</span>
-            <span role="columnheader">操作</span>
-          </div>
-          {guideList.map((guide) => (
-            <div class="manage-row" role="row">
-              <span role="cell">
-                <a href={withBase(`/guides/${guide.id}/`)}>{guide.data.title}</a>
-              </span>
-              <span role="cell">{guide.data.character}</span>
-              <span role="cell muted">{formatDate(guide.data.date)}</span>
-              <span role="cell" class="manage-actions">
-                <a href={repoFileUrl('guides', guide.id, 'edit')} target="_blank" rel="noopener">编辑</a>
-                <a class="danger" href={repoFileUrl('guides', guide.id, 'delete')} target="_blank" rel="noopener">删除</a>
-                <a href={repoFileUrl('guides', guide.id, 'blob')} target="_blank" rel="noopener">源文件</a>
-              </span>
+        <div class="character-grid">
+          {characters.map((character) => (
+            <div class="character-block">
+              <h3>{character.name}</h3>
+              <ul>
+                {teamsOfCharacter(teams, character.name).map((team) => (
+                  <li>
+                    <a href={withBase(`/teams/${team.id}/`)}>{team.data.teamName}</a>
+                    <a href={repoFileUrl('teams', team.id, 'edit')} target="_blank" rel="noopener">编辑</a>
+                    <a class="danger" href={repoFileUrl('teams', team.id, 'delete')} target="_blank" rel="noopener">删除</a>
+                  </li>
+                ))}
+                {teamsOfCharacter(teams, character.name).length === 0 && <li class="muted">暂无</li>}
+              </ul>
             </div>
           ))}
         </div>
@@ -123,36 +70,37 @@ const characters = allCharacters(guides, teams);
       teamList.length === 0 ? (
         <p class="empty">还没有配队。</p>
       ) : (
-        <div class="manage-table" role="table" aria-label="配队列表">
-          <div class="manage-row manage-row--head" role="row">
-            <span role="columnheader">配队</span>
-            <span role="columnheader">核心 / 体系</span>
-            <span role="columnheader">日期</span>
-            <span role="columnheader">操作</span>
-          </div>
-          {teamList.map((team) => (
-            <div class="manage-row" role="row">
-              <span role="cell">
-                <a href={withBase(`/teams/${team.id}/`)}>{team.data.teamName}</a>
-              </span>
-              <span role="cell">
-                {team.data.coreCharacter} · {team.data.element}
-              </span>
-              <span role="cell muted">{formatDate(team.data.date)}</span>
-              <span role="cell" class="manage-actions">
-                <a href={repoFileUrl('teams', team.id, 'edit')} target="_blank" rel="noopener">编辑</a>
-                <a class="danger" href={repoFileUrl('teams', team.id, 'delete')} target="_blank" rel="noopener">删除</a>
-                <a href={repoFileUrl('teams', team.id, 'blob')} target="_blank" rel="noopener">源文件</a>
-              </span>
-            </div>
-          ))}
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>配队</th>
+                <th>核心 · 体系</th>
+                <th>日期</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              {teamList.map((team) => (
+                <tr>
+                  <td>
+                    <a href={withBase(`/teams/${team.id}/`)}>{team.data.teamName}</a>
+                  </td>
+                  <td>
+                    {team.data.coreCharacter} · {team.data.element}
+                  </td>
+                  <td>{formatDate(team.data.date)}</td>
+                  <td class="table__actions">
+                    <a href={repoFileUrl('teams', team.id, 'edit')} target="_blank" rel="noopener">编辑</a>
+                    <a class="danger" href={repoFileUrl('teams', team.id, 'delete')} target="_blank" rel="noopener">删除</a>
+                    <a href={repoFileUrl('teams', team.id, 'blob')} target="_blank" rel="noopener">源文件</a>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )
     }
   </section>
-
-  <p class="notice" style="margin-top: 2rem;">
-    删除流程：点<strong>删除</strong> → GitHub 打开该文件的删除确认页 → 提交（会自动重新构建，约 1 分钟生效）。
-    如果开了分支保护且不允许直推，GitHub 会让你新建分支 + PR，你在 PR 里批准合并即可。
-  </p>
 </BaseLayout>
