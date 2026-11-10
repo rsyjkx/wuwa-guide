@@ -1,7 +1,8 @@
----
+﻿---
 import '../styles/global.css';
 import SiteHeader from './SiteHeader.astro';
 import SiteFooter from './SiteFooter.astro';
+import ProseLightbox from './ProseLightbox.astro';
 import FeedbackDialog from './FeedbackDialog.astro';
 import { SITE } from '../config';
 import { withBase } from '../lib/urls';
@@ -41,5 +42,8 @@ const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : As
     <SiteFooter />
     <!-- 全站右下角的"反馈 Bug"悬浮按钮 + 模态框 -->
     <FeedbackDialog />
+    <!-- 正文图片点开看大图（Markdown 里的 ![](…)） -->
+    <ProseLightbox />
   </body>
 </html>
+
