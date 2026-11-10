@@ -1,0 +1,26 @@
+---
+# 配队攻略模板：复制到 src/content/teams/<slug>.md 后填写
+teamName: ''
+coreCharacter: ''
+members:
+  - name: ''
+    role: ''
+element: ''
+tier: ''
+scenario: []
+summary: ''
+author: ''
+date: 2026-01-01
+cover: ''
+images: []
+video: '' # 配队操作流程视频链接
+videoCredit: '' # 视频出处，例如：B 站 @某某某
+---
+
+## 角色及其武器
+
+<!-- 每个成员一行：角色 | 武器 | 为什么用这把 -->
+
+## 声骸选择
+
+<!-- 每个成员的套装、主词条、副词条，以及是否有替代方案 -->
