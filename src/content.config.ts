@@ -168,6 +168,8 @@ const teams = defineCollection({
     tier: optionalText,
     /** 标签：体系 / 属性，例如 同奏、导电（列表页筛选用） */
     tags: tagList.default([]),
+    /** 伤害类型：普攻 / 重击 / 共鸣技能 / 共鸣解放（列表页筛选用） */
+    damageTypes: tagList.default([]),
     scenario: tagList.default([]),
     summary: optionalText,
     author: optionalText,
