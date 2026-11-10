@@ -20,6 +20,7 @@ buildMembers:
     keyNodes: [2, 3, 6]
     nodeNotes: "2 命：质变，建议抽\n3 命：数值提升\n6 命：氪金考虑"
     substitute: "长离 / 折枝"
+    talentOrder: [共鸣回路, 共鸣解放, 变奏, 普攻, 共鸣技能]
     echoSet: "衍梦照世之心"
     echoCosts:
       - { cost: "COST4", main: "暴击 / 爆伤" }
