@@ -34,7 +34,8 @@ buildMembers:
     echoFirst: "无归的谬误/鸣钟之龟"
 coreCharacter: "椿"
 element: "湮灭"
-tags: ["普攻", "湮灭"]
+damageTypes: ["普攻"]
+tags: ["湮灭"]
 author: "本站测试"
 syncBody: true
 ---
