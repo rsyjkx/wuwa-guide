@@ -10,9 +10,10 @@ interface Props {
 
 const { team, showElement = true } = Astro.props;
 const { teamName, coreCharacter, members, element, tier, scenario, summary, date, cover, tags, damageTypes } = team.data;
-// 筛选用的数据：标签 = tags + 体系；角色 = 成员（不含下位替代）
-const filterSystems = [...new Set(tags)].join('|');
-const filterElements = [...new Set(tags)].join('|');
+// 卡片展示：标签（去掉与"属性"重复的）+ 伤害类型；角色只算成员，不含下位替代
+const tagChips = [...new Set([...tags.filter((tag) => tag && tag !== element), ...(damageTypes ?? [])])];
+const filterSystems = [...new Set(tags.filter((tag) => tag && tag !== element))].join('|');
+const filterElements = element ?? '';
 const filterChars = members.map((member) => member.name).join('|');
 const filterDamage = [...new Set(damageTypes ?? [])].join('|');
 const hasTopTier = tier ? /^t0(\.5)?$/i.test(tier.trim()) : false;
@@ -45,9 +46,9 @@ const hasTopTier = tier ? /^t0(\.5)?$/i.test(tier.trim()) : false;
     }
   </ul>
 
-  {[...new Set([...tags, ...(damageTypes ?? [])])].length > 0 && (
+  {tagChips.length > 0 && (
     <ul class="chips" data-tag-chips aria-label="标签">
-      {[...new Set([...tags, ...(damageTypes ?? [])])].map((chip) => (
+      {tagChips.map((chip) => (
         <li class="chip chip--tag">
           <button type="button" data-tag={chip} title="按这个标签筛选">{chip}</button>
         </li>
