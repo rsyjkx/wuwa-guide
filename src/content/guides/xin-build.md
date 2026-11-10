@@ -1,5 +1,5 @@
 ---
-title: "今汐 养成面板（一图流）"
+title: "心月狐养成面板（一图流）"
 character: 今汐
 author: 站内示例
 date: 2026-11-10
@@ -19,6 +19,14 @@ build:
       note: "次选"
     - name: "掣傀之手"
       note: "替代"
+  echoCosts:
+    - { cost: "- 4 费：暴击 / 爆伤", main: "" }
+    - { cost: "- 3 费：导电加成", main: "" }
+    - { cost: "- 3 费：导电 / 攻击", main: "" }
+    - { cost: "- 1 费：攻击加成", main: "" }
+    - { cost: "- 1 费：攻击加成", main: "" }
+    - { cost: "- 套装：天演渊心，首位声骸天演渊心", main: "" }
+    - { cost: "- 副词条：双爆 > 攻击% > 共鸣技能 > 其他", main: "" }
   echoSet: "天演渊心"
   echoFirst: "天演渊心（4 费）"
   substatOrder: "双爆 > 攻击% > 共鸣技能 > 其他"
