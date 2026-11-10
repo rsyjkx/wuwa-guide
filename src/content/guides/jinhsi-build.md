@@ -1,6 +1,6 @@
 ---
-title: 今汐 养成面板（一图流）
-character: 今汐
+title: 心月狐 养成面板（一图流）
+character: 心
 author: 站内示例
 date: 2026-11-10
 version: '2.4'
