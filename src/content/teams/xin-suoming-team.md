@@ -10,30 +10,9 @@ members:
   - name: "守岸人"
     role: "治疗 / 辅助"
 buildMembers:
-  - slot: "一号位"
-    character: "心"
-    hp: "28000"
-    attack: "2250"
-    energyRegen: "125%"
-    critRate: "72%"
-    critDamage: "272%"
-    keyNodes: [2, 3, 6]
-    nodeNotes: "2 命：质变，建议抽\n3 命：数值提升\n6 命：氪金考虑"
-    substitute: "长离 / 折枝"
-    talentOrder: [共鸣回路, 共鸣解放, 变奏, 普攻, 共鸣技能]
-    echoSet: "衍梦照世之心"
-    echoCosts:
-      - { cost: "COST4", main: "暴击 / 爆伤" }
-      - { cost: "COST3", main: "导电 / 攻击" }
-      - { cost: "COST3", main: "导电加成" }
-      - { cost: "COST1", main: "攻击加成" }
-      - { cost: "COST1", main: "攻击加成" }
-    echoFirst: "天演溯心"
-    substatOrder: "双爆 > 攻击% > 普攻伤害 > 共鸣效率"
-    weapons:
-      - name: "玉阙玄华 > 幽冥的忘忧章 > 掣傀之手 > 曙光"
   - slot: "二号位"
     character: "锁瞑"
+    substitute: "今汐"
     echoCosts:
       - { cost: "COST4", main: "暴击 / 爆伤" }
       - { cost: "COST3", main: "衍射 / 攻击" }
@@ -42,10 +21,14 @@ buildMembers:
       - { cost: "COST1", main: "攻击加成" }
     echoFirst: "绝息魄"
     substatOrder: "双爆 > 攻击% > 普攻 > 共鸣效率"
-    weapons:
-      - name: "专武＞千古洑流"
   - slot: "可替换"
     character: "守岸人"
+    substitute: "维"
+    hp: "40000"
+    attack: "无"
+    energyRegen: "260"
+    critRate: "无"
+    critDamage: "无"
     echoSet: "隐世回光"
     echoCosts:
       - { cost: "COST3", main: "共鸣效率" }
@@ -56,8 +39,6 @@ buildMembers:
     echoFirst: "无归的谬误"
     substatOrder: "共鸣效率 > 生命 > 其他"
     requirement: "共鸣效率需求 250%"
-    weapons:
-      - name: "星序协响 > 奇幻变奏 > 渊海回声"
 coreCharacter: "心月狐"
 element: "同奏/导电"
 tier: "T0"
@@ -69,12 +50,10 @@ syncBody: true
 
 ## 角色及其武器
 
-- 一号位 心：玉阙玄华 > 幽冥的忘忧章 > 掣傀之手 > 曙光
-- 二号位 锁瞑：专武＞千古洑流
-- 可替换 守岸人：星序协响 > 奇幻变奏 > 渊海回声
+- 二号位 锁瞑：—
+- 可替换 守岸人：—
 
 ## 声骸选择
 
-- 一号位 心：套装 衍梦照世之心；首位 天演溯心；副词条 双爆 > 攻击% > 普攻伤害 > 共鸣效率
 - 二号位 锁瞑：首位 绝息魄；副词条 双爆 > 攻击% > 普攻 > 共鸣效率
 - 可替换 守岸人：套装 隐世回光；首位 无归的谬误；副词条 共鸣效率 > 生命 > 其他；共鸣效率需求 250%
