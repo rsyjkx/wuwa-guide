@@ -166,6 +166,8 @@ const teams = defineCollection({
     element: requiredText,
     /** 强度分级：只做展示，不参与任何排序逻辑 */
     tier: optionalText,
+    /** 标签：体系 / 属性，例如 同奏、导电（列表页筛选用） */
+    tags: tagList.default([]),
     scenario: tagList.default([]),
     summary: optionalText,
     author: optionalText,
