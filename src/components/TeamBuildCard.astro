@@ -15,6 +15,7 @@ interface BuildMember {
   critDamage?: string;
   energyRegen?: string;
   keyNodes: number[];
+  nodeNotes?: string;
   echoSet?: string;
   echoCosts: { cost: string; main: string }[];
   echoFirst?: string;
@@ -51,9 +52,15 @@ const { members, teamName } = Astro.props;
               </ul>
             )}
             {member.keyNodes.length > 0 && (
-              <ul class="build-nodes" style="margin-top: 0.4rem">
-                {member.keyNodes.map((node) => <li>{node} 链</li>)}
-              </ul>
+              <div style="margin-top: 0.4rem">
+                <p class="team-build__slot" style="margin: 0 0 0.25rem">命座推荐</p>
+                <ul class="build-nodes">
+                  {member.keyNodes.map((node) => <li>{node} 链</li>)}
+                </ul>
+              </div>
+            )}
+            {member.nodeNotes && (
+              <p class="build-note" style="white-space: pre-line">命座效果：{member.nodeNotes}</p>
             )}
           </div>
 
