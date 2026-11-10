@@ -6,7 +6,9 @@ import filters from '../../data/filters.json';
 import { sortTeams } from '../../lib/characters';
 
 const teams = sortTeams(await getCollection('teams'));
-const systems = filters.systems ?? [];
+const extraTags = [...new Set(teams.flatMap((team) => team.data.tags ?? []))]
+  .filter((tag) => !(filters.systems ?? []).includes(tag) && !(filters.elements ?? []).includes(tag));
+const systems = [...(filters.systems ?? []), ...extraTags];
 const elements = filters.elements ?? [];
 const characters = filters.characters ?? [];
 ---
@@ -101,6 +103,18 @@ const characters = filters.characters ?? [];
     if (presetTag) selected.system.add(presetTag);
     if (presetChar) selected.char.add(presetChar);
     if (presetTag || presetChar) apply();
+
+    // 点卡片上的标签 = 直接筛选（不跳转）
+    grid.addEventListener('click', (event) => {
+      const tagButton = (event.target as HTMLElement).closest<HTMLElement>('[data-tag]');
+      if (!tagButton) return;
+      const value = tagButton.dataset.tag ?? '';
+      const inElements = [...root.querySelectorAll('[data-group="element"] [data-value]')].some((chip) => chip.textContent?.trim() === value);
+      const group = inElements ? 'element' : 'system';
+      if (selected[group].has(value)) selected[group].delete(value);
+      else selected[group].add(value);
+      apply();
+    });
 
     root.addEventListener('click', (event) => {
       const chip = event.target.closest('[data-value]');
