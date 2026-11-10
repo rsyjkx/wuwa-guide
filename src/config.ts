@@ -27,8 +27,8 @@ export const SITE = {
  * 避免 `npm run setup` 做文本替换时改错对象。
  */
 export const FEEDBACK = {
-  repoOwner: 'YOUR_GITHUB_USER',
-  repoName: 'YOUR_REPO',
+  repoOwner: 'rsyjkx',
+  repoName: 'wuwa-guide',
   /** Issue 上自动打的标签，仓库里先建好同名标签即可 */
   labels: ['content-error', 'feedback'],
 } as const;
@@ -43,8 +43,8 @@ export const FEEDBACK = {
  */
 export const STATICMAN = {
   endpoint: 'https://best.staticman.net/v2/entry',
-  username: 'YOUR_GITHUB_USER',
-  repository: 'YOUR_REPO',
+  username: 'rsyjkx',
+  repository: 'wuwa-guide',
   branch: 'main',
 } as const;
 

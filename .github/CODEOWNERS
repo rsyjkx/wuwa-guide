@@ -1,6 +1,6 @@
 # CODEOWNERS —— 配合仓库设置里的 "Require review from Code Owners" 使用。
 #
 # 这里只有站长一个人：任何 PR 都需要站长批准后才能合并。
-# 本文件由 `npm run setup` 生成（把占位符换成你的 GitHub 用户名）。
+# 本文件由 `npm run setup` 生成。
 
-*  @YOUR_GITHUB_USER
+*  @rsyjkx
