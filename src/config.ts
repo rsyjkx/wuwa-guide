@@ -14,7 +14,7 @@ export const SITE = {
   /**
    * 出现在首页标题、meta description 里的一句话介绍。
    */
-  description: '《鸣潮》单角色攻略与配队推荐，支持按角色筛选与全文搜索。',
+  description: '《鸣潮》配队推荐：每个位置的角色面板、武器、声骸与加点，支持按角色筛选与全文搜索。',
   lang: 'zh-CN',
 } as const;
 
