@@ -1609,3 +1609,26 @@ textarea {
   color: var(--accent);
   text-decoration: none;
 }
+
+
+.chip--damage {
+  border-color: rgba(255, 214, 170, 0.5);
+}
+
+.chip--damage button {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: #ffd6aa;
+  cursor: pointer;
+}
+
+.chip--tag button {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: var(--accent);
+  cursor: pointer;
+}
