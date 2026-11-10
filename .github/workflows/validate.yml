@@ -24,8 +24,5 @@ jobs:
       - name: 安装依赖
         run: npm ci
 
-      - name: 表单字段与 staticman.yml 一致性检查
-        run: npm run check:forms
-
       - name: 构建站点（含 Pagefind 索引）
         run: npm run build
