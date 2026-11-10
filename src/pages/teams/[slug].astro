@@ -3,6 +3,7 @@ import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../components/BaseLayout.astro';
 import MemberList from '../../components/MemberList.astro';
 import Gallery from '../../components/Gallery.astro';
+import TeamBuildCard from '../../components/TeamBuildCard.astro';
 import VideoEmbed from '../../components/VideoEmbed.astro';
 import { characterPath, formatDate } from '../../lib/characters';
 import { assetUrl } from '../../lib/urls';
@@ -13,7 +14,7 @@ export async function getStaticPaths() {
 }
 
 const { team } = Astro.props;
-const { teamName, coreCharacter, members, element, tier, scenario, summary, author, date, cover, images, video, videoCredit } = team.data;
+const { teamName, coreCharacter, members, element, tier, scenario, summary, author, date, cover, images, video, videoCredit, buildMembers } = team.data;
 const { Content, headings } = await render(team);
 const sections = headings.filter((heading) => heading.depth === 2);
 const hasTopTier = tier ? /^t0(\.5)?$/i.test(tier.trim()) : false;
@@ -80,6 +81,8 @@ const hasTopTier = tier ? /^t0(\.5)?$/i.test(tier.trim()) : false;
         </nav>
       )
     }
+
+    {buildMembers.length > 0 && <TeamBuildCard members={buildMembers} teamName={teamName} />}
 
     <div class="prose">
       <Content />
