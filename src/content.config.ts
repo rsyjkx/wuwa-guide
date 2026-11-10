@@ -173,6 +173,8 @@ const teams = defineCollection({
     videoCredit: optionalText,
     /** 配队面板（可选）：每个位置一段，渲染成"一图流" */
     buildMembers: z.array(buildMember).max(8).default([]),
+    /** 正文是否跟随面板自动生成（开启后正文由面板数据生成，不再手写） */
+    syncBody: z.boolean().default(false),
   }),
 });
 
