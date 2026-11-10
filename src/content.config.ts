@@ -60,6 +60,52 @@ const urlList = z.preprocess(toArray, z.array(urlText).max(12, '最多 12 张图
 const tagList = z.preprocess(toArray, z.array(z.string().max(40)).max(12));
 
 /**
+ * 养成面板（可选）：攻略页顶部那张"养成卡"用的结构化数据。
+ * 对应参考图里的：毕业面板 / 关键共鸣链 / 天赋加点 / 武器推荐 / 声骸推荐 / 队伍搭配。
+ * 所有子字段都可选，没填就不渲染那一块。
+ */
+const buildWeapon = z.object({
+  name: requiredText,
+  note: optionalText,
+  image: optionalUrl,
+});
+
+const buildEcho = z.object({
+  /** 费用：4 / 3 / 1，或"首位" */
+  cost: requiredText,
+  /** 主词条，例如 暴击/爆伤 */
+  main: requiredText,
+});
+
+const buildSchema = z.object({
+  attack: optionalText,
+  critRate: optionalText,
+  critDamage: optionalText,
+  energyRegen: optionalText,
+  /** 关键共鸣链：1–6 里哪几链最关键 */
+  keyNodes: z
+    .preprocess(
+      (value) => (Array.isArray(value) ? value : typeof value === 'string' ? value.split(/[\s,，、]+/) : []),
+      z.array(z.coerce.number().int().min(1).max(6)).max(6),
+    )
+    .default([]),
+  /** 天赋加点顺序，从高到低 */
+  talentOrder: tagList.default([]),
+  weapons: z.array(buildWeapon).max(6).default([]),
+  echoCosts: z.array(buildEcho).max(8).default([]),
+  echoSet: optionalText,
+  echoFirst: optionalText,
+  substatOrder: optionalText,
+  teams: tagList.default([]),
+});
+
+/** 面板整体可选：不填就不渲染。 */
+const buildOptional = z.preprocess(
+  (value) => (value === null || value === '' ? undefined : value),
+  buildSchema.optional(),
+);
+
+/**
  * 单角色攻略。
  * Staticman 表单字段与这里一一对应：
  *   title / character / author / version / tags / cover / images / video / content
@@ -88,6 +134,8 @@ const guides = defineCollection({
     video: optionalUrl,
     /** 视频出处（可选）：作者 / 攻略组 / UP 主名字，标注来源用 */
     videoCredit: optionalText,
+    /** 养成面板（可选）：顶部"养成卡"的结构化数据 */
+    build: buildOptional,
   }),
 });
 
