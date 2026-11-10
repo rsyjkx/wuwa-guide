@@ -1,0 +1,89 @@
+---
+/**
+ * 配队"一图流"面板：每个位置一排，左边角色，中间声骸，右边武器 + 加点。
+ * 数据来自 frontmatter 的 buildMembers；没填的字段不渲染。
+ */
+import { assetUrl } from '../lib/urls';
+
+interface BuildMember {
+  slot: string;
+  character: string;
+  echoSet?: string;
+  echoCosts: { cost: string; main: string }[];
+  echoFirst?: string;
+  substatOrder?: string;
+  requirement?: string;
+  weapons: { name: string; note?: string; image?: string }[];
+  talentOrder: string[];
+}
+
+interface Props {
+  members: BuildMember[];
+  teamName: string;
+}
+
+const { members, teamName } = Astro.props;
+---
+{
+  members.length > 0 && (
+    <section class="team-build" aria-label={`${teamName} 配队面板`} data-pagefind-ignore>
+      {members.map((member) => (
+        <article class="team-build__row">
+          <div class="team-build__who">
+            <p class="team-build__slot">{member.slot}</p>
+            <p class="team-build__name">{member.character}</p>
+            {member.echoSet && <p class="team-build__set">{member.echoSet}</p>}
+          </div>
+
+          <div class="team-build__echo">
+            {member.echoCosts.length > 0 && (
+              <ul class="build-echoes">
+                {member.echoCosts.map((echo) => (
+                  <li>
+                    <span class="build-echoes__cost">{echo.cost}</span>
+                    <span>{echo.main}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {member.echoFirst && <p class="build-note">首位声骸：{member.echoFirst}</p>}
+            {member.substatOrder && <p class="build-note">副词条：{member.substatOrder}</p>}
+            {member.requirement && <p class="build-note build-note--strong">{member.requirement}</p>}
+          </div>
+
+          <div class="team-build__gear">
+            {member.weapons.length > 0 && (
+              <>
+                <h3 class="build-block__title">武器推荐</h3>
+                <ol class="build-weapons">
+                  {member.weapons.map((weapon) => (
+                    <li>
+                      {weapon.image && (
+                        <img src={assetUrl(weapon.image)} alt={weapon.name} loading="lazy" decoding="async" referrerpolicy="no-referrer" />
+                      )}
+                      <span class="build-weapons__name">{weapon.name}</span>
+                      {weapon.note && <span class="build-weapons__note">{weapon.note}</span>}
+                    </li>
+                  ))}
+                </ol>
+              </>
+            )}
+            {member.talentOrder.length > 0 && (
+              <>
+                <h3 class="build-block__title" style="margin-top: 0.6rem">加点推荐</h3>
+                <ol class="build-order">
+                  {member.talentOrder.map((talent, index) => (
+                    <li>
+                      <span class="build-order__index">{index + 1}</span>
+                      {talent}
+                    </li>
+                  ))}
+                </ol>
+              </>
+            )}
+          </div>
+        </article>
+      ))}
+    </section>
+  )
+}
