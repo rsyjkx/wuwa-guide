@@ -1,4 +1,4 @@
-﻿---
+---
 teamName: 今汐聚爆速切队（示例）
 coreCharacter: 今汐
 members:
@@ -20,6 +20,8 @@ videoCredit: B 站 @示例UP主
 
 ## 角色及其武器
 
+![成员与武器](/media/example-shot-1.svg)
+
 - 今汐 | 专武 | 最高爆发
 - 长离 | 四星暴击剑 | 提供增伤
 - 白芷 | 治疗武器 | 保证续航
@@ -29,4 +31,5 @@ videoCredit: B 站 @示例UP主
 - 今汐：5 件套，暴击 / 暴伤
 - 长离：4+2 混搭
 - 白芷：治疗套装
+
 
