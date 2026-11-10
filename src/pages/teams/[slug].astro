@@ -14,7 +14,7 @@ export async function getStaticPaths() {
 }
 
 const { team } = Astro.props;
-const { teamName, coreCharacter, members, element, tier, scenario, summary, author, date, cover, images, video, videoCredit, buildMembers } = team.data;
+const { teamName, coreCharacter, members, element, tier, scenario, summary, author, date, cover, images, video, videoCredit, buildMembers, syncBody } = team.data;
 const { Content, headings } = await render(team);
 const sections = headings.filter((heading) => heading.depth === 2);
 const hasTopTier = tier ? /^t0(\.5)?$/i.test(tier.trim()) : false;
@@ -84,9 +84,40 @@ const hasTopTier = tier ? /^t0(\.5)?$/i.test(tier.trim()) : false;
 
     {buildMembers.length > 0 && <TeamBuildCard members={buildMembers} teamName={teamName} />}
 
-    <div class="prose">
-      <Content />
-    </div>
+    {
+      syncBody && buildMembers.length > 0 ? (
+        <div class="prose">
+          <h2>角色及其武器</h2>
+          <ul>
+            {buildMembers.map((member) => (
+              <li>
+                {member.slot} {member.character}：
+                {member.weapons.length > 0
+                  ? member.weapons.map((weapon) => weapon.name + (weapon.note ? `（${weapon.note}）` : '')).join(' > ')
+                  : '—'}
+              </li>
+            ))}
+          </ul>
+
+          <h2>声骸选择</h2>
+          <ul>
+            {buildMembers.map((member) => (
+              <li>
+                {member.slot} {member.character}：
+                {member.echoSet ? `套装 ${member.echoSet}；` : ''}
+                {member.echoFirst ? `首位 ${member.echoFirst}；` : ''}
+                {member.substatOrder ? `副词条 ${member.substatOrder}` : ''}
+                {member.requirement ? `；${member.requirement}` : ''}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : (
+        <div class="prose">
+          <Content />
+        </div>
+      )
+    }
 
     {
       video && (
