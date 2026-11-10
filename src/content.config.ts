@@ -86,6 +86,8 @@ const guides = defineCollection({
     images: urlList.default([]),
     /** 视频（可选）：B 站 / YouTube 链接，或 .mp4 直链 */
     video: optionalUrl,
+    /** 视频出处（可选）：作者 / 攻略组 / UP 主名字，标注来源用 */
+    videoCredit: optionalText,
   }),
 });
 
@@ -119,6 +121,8 @@ const teams = defineCollection({
     images: urlList.default([]),
     /** 视频（可选）：演示视频 */
     video: optionalUrl,
+    /** 视频出处（可选）：视频作者 / 攻略组，标注来源用 */
+    videoCredit: optionalText,
   }),
 });
 
