@@ -50,10 +50,15 @@ if (base) {
 }
 
 // 清掉可能残留的内容缓存，避免"已删除的内容还在"
-const contentCache = resolve(rootDir, '.astro/data-store.json');
-if (existsSync(contentCache)) {
-  rmSync(contentCache, { force: true });
-  console.log('已清理内容缓存 .astro/data-store.json');
+// Astro 6 会把内容缓存写到 node_modules/.astro/data-store.json，两个位置都要清
+for (const cachePath of [
+  resolve(rootDir, '.astro/data-store.json'),
+  resolve(rootDir, 'node_modules/.astro/data-store.json'),
+]) {
+  if (existsSync(cachePath)) {
+    rmSync(cachePath, { force: true });
+    console.log('已清理内容缓存 ' + cachePath.replace(rootDir + '/', ''));
+  }
 }
 
 const build = run('astro build', [resolve(rootDir, 'node_modules/astro/bin/astro.mjs'), 'build']);
