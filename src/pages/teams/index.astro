@@ -127,6 +127,15 @@ const damageTypes = filters.damageTypes ?? [];
       apply();
     });
 
+    grid.addEventListener('click', (event) => {
+      const damageButton = (event.target as HTMLElement).closest<HTMLElement>('[data-damage-tag]');
+      if (!damageButton) return;
+      const value = damageButton.dataset.damageTag ?? '';
+      if (selected.damage.has(value)) selected.damage.delete(value);
+      else selected.damage.add(value);
+      apply();
+    });
+
     root.addEventListener('click', (event) => {
       const chip = event.target.closest('[data-value]');
       if (chip) {
