@@ -74,15 +74,6 @@ export function newFileUrl(kind: SubmissionKind): string {
 }
 
 /**
- * Issue 投稿模板地址（Staticman 不可用时的主通道）。
- * 访客点开就是填好的表单，提交后由 issue-to-pr 工作流自动开 PR。
- */
-export function issueTemplateUrl(kind: SubmissionKind): string {
-  const template = kind === 'guides' ? 'submission-guide.yml' : 'submission-team.yml';
-  return `https://github.com/${STATICMAN.username}/${STATICMAN.repository}/issues/new?template=${template}`;
-}
-
-/**
  * 仓库里某个内容文件的 GitHub 操作链接。
  *   blob   → 查看
  *   edit   → 网页编辑
